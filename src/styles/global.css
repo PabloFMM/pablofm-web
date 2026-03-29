@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--font-display: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+		--font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+		--background: 240 6% 2%;
+		--foreground: 210 20% 98%;
+		--card: 240 8% 5%;
+		--card-foreground: 210 20% 98%;
+		--popover: 240 8% 5%;
+		--popover-foreground: 210 20% 98%;
+		--primary: 320 100% 60%;
+		--primary-foreground: 240 6% 2%;
+		--secondary: 240 6% 12%;
+		--secondary-foreground: 210 20% 98%;
+		--muted: 240 6% 14%;
+		--muted-foreground: 240 5% 58%;
+		--accent: 186 100% 52%;
+		--accent-foreground: 240 6% 2%;
+		--destructive: 0 72% 51%;
+		--destructive-foreground: 210 20% 98%;
+		--border: 240 8% 16%;
+		--input: 240 8% 16%;
+		--ring: 320 100% 60%;
+		--radius: 0.75rem;
+		--neon-pink: 320 100% 58%;
+		--neon-cyan: 186 100% 52%;
+	}
+
+	* {
+		@apply border-border;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply min-h-screen bg-background font-sans text-foreground antialiased;
+	}
+}

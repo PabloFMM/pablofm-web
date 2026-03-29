@@ -1,43 +1,48 @@
-# Astro Starter Kit: Minimal
+# Pablo FM — Official website
 
-```sh
-npm create astro@latest -- --template minimal
+Professional landing site for [pablofm.com](https://pablofm.com): electronic music radio, DJ sets, and live broadcast presence. Built as a fast, static-first experience with interactive islands only where they add value.
+
+## Tech stack
+
+- **[Astro 5](https://astro.build/)** — Static site generation, minimal JavaScript by default
+- **[React](https://react.dev/)** — Islands for the live audio player (`client:visible`)
+- **[Tailwind CSS](https://tailwindcss.com/)** — Utility-first styling with a custom cyber-neon theme
+- **[shadcn/ui](https://ui.shadcn.com/)** — Accessible UI primitives (Button, Card) adapted for this project
+- **[Framer Motion](https://www.framer.com/motion/)** — Motion only inside React islands (player), not on the static shell
+- **[Lucide React](https://lucide.dev/)** — Icons in interactive components
+
+## Run locally
+
+Requirements: **Node.js ≥ 22.12**
+
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open [http://localhost:4321](http://localhost:4321).
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm run build    # production build → ./dist/
+npm run preview  # serve ./dist locally
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Environment variables
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Optional:
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Variable | Description |
+| -------- | ----------- |
+| `PUBLIC_STREAM_URL` | URL of your live audio stream (e.g. Icecast MP3). If unset, the player uses a demo stream. |
 
-## 🧞 Commands
+Copy `.env.example` to `.env` and adjust as needed.
 
-All commands are run from the root of the project, from a terminal:
+## Open source
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+This project is intended to be released under the **MIT License** once a `LICENSE` file is added. Until then, all rights reserved by the author; third-party dependencies remain under their respective licenses.
 
-## 👀 Want to learn more?
+## Links
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- **Site:** [pablofm.com](https://pablofm.com)
+- **Games:** [numen.games](https://numen.games)
+- **Store:** [numinia.store](https://numinia.store)
