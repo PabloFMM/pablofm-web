@@ -1,0 +1,163 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import Timeline from "@/components/Timeline.astro";
+import HighlightBox from "@/components/HighlightBox.astro";
+import Tag from "@/components/Tag.astro";
+
+const milestones = [
+  {
+    phase: "Los inicios",
+    title: "Producción Audiovisual",
+    description:
+      "Maquetas, cortometrajes, anuncios de TV. Donde descubrí que montar cosas era lo mío. Mi primera aventura emprendedora nació de la pasión por contar historias.",
+  },
+  {
+    phase: "Mercados internacionales",
+    title: "Vilma Oil",
+    description:
+      "Gestión comercial internacional. Aprendí a abrir mercados, negociar y operar en contextos donde todo es nuevo. Una escuela de resiliencia.",
+  },
+  {
+    phase: "La startup",
+    title: "Videona — Cofundador",
+    description:
+      "App de edición de vídeo móvil profesional. Con Iago Fernández-Cedrón pasamos por Tetuan Valley, Lisbon Challenge, Campus Madrid. Cliente B2B: RTVE. La experiencia que lo cambió todo.",
+  },
+  {
+    phase: "Ecosistema",
+    title: "Tetuan Valley & Campus Madrid",
+    description:
+      "De emprendedor a mentor. Empecé a devolver al ecosistema lo que el ecosistema me había dado. Conexiones, aprendizajes, y muchos cafés con founders.",
+  },
+  {
+    phase: "Inversión",
+    title: "BackFund — Seed Investor",
+    description:
+      "Apostando por equipos fundadores con visión y ejecución en fases tempranas. Invirtiendo no solo capital, sino experiencia y red de contactos.",
+  },
+  {
+    phase: "Hoy",
+    title: "Construyendo lo siguiente",
+    description:
+      "Siempre en modo esponja. Explorando nuevos proyectos, conectando personas, y compartiendo lo que aprendo en el camino.",
+  },
+];
+
+const values = [
+  "Construir antes que teorizar",
+  "Conectar personas y mundos",
+  "Compartir lo aprendido",
+  "Nunca parar de aprender",
+  "Autenticidad sobre perfección",
+];
+---
+
+<Layout
+  title="Sobre mí — Pablo FM"
+  description="DJ, producer, entrepreneur, investor. La historia de Pablo Fernández-Maquieira Martínez — de la producción audiovisual al ecosistema startup."
+  canonicalPath="/sobre-mi"
+  activeNav="sobre-mi"
+>
+  <PageHero
+    label="Sobre mí"
+    title="La historia corta"
+    description="No soy un perfil genérico. Audio + vídeo + producto + startup + inversión es una combinación rara. Y eso es lo que me hace diferente."
+  />
+
+  <!-- Bio -->
+  <section class="pb-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
+        <p>
+          <strong class="text-foreground">Pablo Fernández-Maquieira Martínez</strong> — conocido como <strong class="text-accent">Pablo FM</strong>. Emprendedor, cofundador de Videona, seed investor en BackFund, mentor en Tetuan Valley, con experiencia en marketing, producción audiovisual, producto, estrategia y lanzamiento de startups.
+        </p>
+        <p>
+          He pasado por mercados internacionales, producción audiovisual, la creación de una startup de vídeo móvil que llegó a tener a RTVE como cliente, inversión seed, comunidad wellness, y formación continua. Cada etapa me ha enseñado algo diferente, pero el hilo conductor siempre ha sido el mismo: <strong class="text-foreground">montar cosas y conectar personas</strong>.
+        </p>
+        <p>
+          Mi energía es "hands-on". No me quedo en la teoría — prefiero lanzar, iterar, aprender y volver a lanzar. Y en el camino, rodearme de gente que me inspire tanto como yo intento inspirarles a ellos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlight -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <HighlightBox>
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          <strong class="text-accent">Mi filosofía:</strong> Construir antes que teorizar. Conectar antes que competir. Compartir antes que acumular. La marca personal no es un logo ni una web bonita — es la promesa que haces al mundo sobre quién eres.
+        </p>
+      </HighlightBox>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Trayectoria"
+        title="El camino hasta aquí"
+      />
+      <div class="mt-8 max-w-2xl">
+        <Timeline items={milestones} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Principios"
+        title="En lo que creo"
+      />
+      <ul class="mt-6 space-y-3">
+        {values.map((value) => (
+          <li class="flex items-center gap-3 text-muted-foreground">
+            <span class="h-1.5 w-1.5 rounded-full bg-accent" />
+            {value}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Skills"
+        title="Lo que traigo a la mesa"
+      />
+      <div class="mt-6 flex flex-wrap gap-2">
+        {[
+          "Product Management", "Marketing Strategy", "Audio Engineering",
+          "Video Production", "Startup Launch", "Sales", "Mentoría",
+          "Seed Investing", "Community Building", "NFTs / Web3",
+          "Comunicación", "Operaciones", "Audiovisual", "Fitness / Wellness",
+        ].map((skill) => (
+          <Tag text={skill} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-border py-20">
+    <div class="mx-auto max-w-[1100px] px-6 text-center">
+      <h2 class="font-display text-3xl text-foreground">¿Conectamos?</h2>
+      <p class="mx-auto mt-4 max-w-md text-muted-foreground">
+        Siempre abierto a conocer gente interesante, explorar proyectos y echar un café (virtual o presencial).
+      </p>
+      <a
+        href="/contacto"
+        class="mt-8 inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+      >
+        Hablamos
+      </a>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+
+const allProjects = await getCollection("projects");
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title="Proyectos — Pablo FM"
+  description="Videona, BackFund, Tetuan Valley y más. Los proyectos que he montado, en los que he invertido y donde he dejado huella."
+  canonicalPath="/proyectos"
+  activeNav="proyectos"
+>
+  <PageHero
+    label="Proyectos"
+    title="Cosas que he montado"
+    description="Cada proyecto es una prueba viva de quién soy. Desde apps y startups hasta inversión y mentoría."
+  />
+
+  <section class="pb-20">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="grid gap-4 sm:grid-cols-2">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            role={project.data.role}
+            href={project.data.href}
+            tags={project.data.tags}
+            status={project.data.status}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

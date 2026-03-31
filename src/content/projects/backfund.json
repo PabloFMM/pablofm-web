@@ -1,0 +1,9 @@
+{
+  "title": "BackFund",
+  "description": "Fondo de inversión seed donde participo como inversor. Apostando por equipos fundadores con visión y ejecución en fases tempranas.",
+  "role": "Seed Investor",
+  "tags": ["Inversión", "Seed", "Startups"],
+  "status": "active",
+  "order": 2,
+  "featured": true
+}

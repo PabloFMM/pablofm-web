@@ -1,0 +1,10 @@
+{
+  "title": "Tetuan Valley",
+  "description": "Mentor en una de las comunidades de emprendimiento más importantes de Madrid. Ayudando a la siguiente generación de founders a construir sus proyectos.",
+  "role": "Mentor",
+  "href": "https://tetuanvalley.com",
+  "tags": ["Mentoría", "Comunidad", "Startups"],
+  "status": "active",
+  "order": 3,
+  "featured": true
+}

@@ -6,13 +6,14 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-primary text-primary-foreground shadow hover:bg-primary/90",
+					"bg-accent text-background shadow hover:bg-accent/90",
 				secondary:
-					"bg-secondary text-secondary-foreground hover:bg-secondary/80",
+					"bg-card text-foreground border border-border hover:bg-card-hover",
 				ghost: "hover:bg-accent/10 hover:text-accent",
 				outline:
-					"border border-input bg-background hover:bg-accent/10 hover:text-accent",
-				neon: "border border-neon-pink/50 bg-background/80 text-foreground shadow-neon-sm hover:bg-neon-pink/10 hover:border-neon-pink hover:shadow-neon",
+					"border border-border bg-background hover:bg-accent/10 hover:text-accent",
+				brand:
+					"border border-accent/50 bg-accent/10 text-accent shadow-accent-sm hover:bg-accent/20 hover:border-accent",
 			},
 			size: {
 				default: "h-10 px-4 py-2",

@@ -1,0 +1,74 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import { socialLinks } from "@/data/social-links";
+---
+
+<Layout
+  title="Contacto — Pablo FM"
+  description="¿Tienes un proyecto, una idea o simplemente quieres charlar? Escríbeme."
+  canonicalPath="/contacto"
+  activeNav="contacto"
+>
+  <PageHero
+    label="Contacto"
+    title="Hablamos"
+    description="Si tienes un proyecto interesante, quieres colaborar o simplemente charlar — aquí estoy."
+  />
+
+  <section class="pb-20">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="grid gap-12 lg:grid-cols-5">
+        <!-- Form -->
+        <div class="lg:col-span-3">
+          <ContactForm />
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-8 lg:col-span-2">
+          <!-- Social links -->
+          <div>
+            <h3 class="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-dim">
+              Encuéntrame en
+            </h3>
+            <div class="space-y-2">
+              {socialLinks.map((link) => (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground transition-colors hover:border-accent/30 hover:bg-card-hover hover:text-accent"
+                >
+                  <span class="font-medium text-foreground">{link.label}</span>
+                  <span class="ml-auto font-mono text-xs text-dim">↗</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <h3 class="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-dim">
+              Email directo
+            </h3>
+            <a
+              href="mailto:hola@pablofm.com"
+              class="text-sm text-accent transition-colors hover:text-accent/80"
+            >
+              hola@pablofm.com
+            </a>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <h3 class="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-dim">
+              Base
+            </h3>
+            <p class="text-sm text-muted-foreground">Madrid, España</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

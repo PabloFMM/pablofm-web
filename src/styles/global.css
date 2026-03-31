@@ -4,30 +4,43 @@
 
 @layer base {
 	:root {
-		--font-display: "Orbitron", ui-sans-serif, system-ui, sans-serif;
-		--font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-		--background: 240 6% 2%;
-		--foreground: 210 20% 98%;
-		--card: 240 8% 5%;
-		--card-foreground: 210 20% 98%;
-		--popover: 240 8% 5%;
-		--popover-foreground: 210 20% 98%;
-		--primary: 320 100% 60%;
-		--primary-foreground: 240 6% 2%;
-		--secondary: 240 6% 12%;
-		--secondary-foreground: 210 20% 98%;
-		--muted: 240 6% 14%;
-		--muted-foreground: 240 5% 58%;
-		--accent: 186 100% 52%;
-		--accent-foreground: 240 6% 2%;
-		--destructive: 0 72% 51%;
-		--destructive-foreground: 210 20% 98%;
-		--border: 240 8% 16%;
-		--input: 240 8% 16%;
-		--ring: 320 100% 60%;
+		/* Font stacks */
+		--font-display: "Instrument Serif", Georgia, serif;
+		--font-sans: "DM Sans", system-ui, sans-serif;
+		--font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+		/* Core palette — RGB triplets for Tailwind opacity support */
+		--bg: 10 10 11;
+		--bg-card: 17 17 19;
+		--bg-card-hover: 24 24 27;
+		--border: 39 39 42;
+		--text: 250 250 250;
+		--text-muted: 161 161 170;
+		--text-dim: 113 113 122;
+		--accent: 249 115 22;
+
+		/* Semantic colors */
+		--green: 34 197 94;
+		--red: 239 68 68;
+		--yellow: 234 179 8;
+		--blue: 59 130 246;
+		--purple: 168 85 247;
+
+		/* Glow (direct rgba for non-Tailwind use) */
+		--accent-glow: rgba(249, 115, 22, 0.15);
+
+		/* Radius */
 		--radius: 0.75rem;
-		--neon-pink: 320 100% 58%;
-		--neon-cyan: 186 100% 52%;
+
+		/* shadcn compat aliases */
+		--background: var(--bg);
+		--foreground: var(--text);
+		--card: var(--bg-card);
+		--card-foreground: var(--text);
+		--muted: var(--bg-card-hover);
+		--muted-foreground: var(--text-muted);
+		--ring: var(--accent);
+		--input: var(--border);
 	}
 
 	* {
@@ -40,5 +53,29 @@
 
 	body {
 		@apply min-h-screen bg-background font-sans text-foreground antialiased;
+	}
+
+	/* Noise texture overlay */
+	body::after {
+		content: "";
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		pointer-events: none;
+		opacity: 0.035;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+		background-repeat: repeat;
+	}
+
+	/* slideUp animation */
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			transform: translateY(24px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 }

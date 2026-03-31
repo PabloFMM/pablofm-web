@@ -7,39 +7,30 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				border: "hsl(var(--border))",
-				input: "hsl(var(--input))",
-				ring: "hsl(var(--ring))",
-				background: "hsl(var(--background))",
-				foreground: "hsl(var(--foreground))",
-				primary: {
-					DEFAULT: "hsl(var(--primary))",
-					foreground: "hsl(var(--primary-foreground))",
-				},
-				secondary: {
-					DEFAULT: "hsl(var(--secondary))",
-					foreground: "hsl(var(--secondary-foreground))",
-				},
-				muted: {
-					DEFAULT: "hsl(var(--muted))",
-					foreground: "hsl(var(--muted-foreground))",
-				},
+				border: "rgb(var(--border) / <alpha-value>)",
+				input: "rgb(var(--input) / <alpha-value>)",
+				ring: "rgb(var(--ring) / <alpha-value>)",
+				background: "rgb(var(--background) / <alpha-value>)",
+				foreground: "rgb(var(--foreground) / <alpha-value>)",
 				accent: {
-					DEFAULT: "hsl(var(--accent))",
-					foreground: "hsl(var(--accent-foreground))",
-				},
-				destructive: {
-					DEFAULT: "hsl(var(--destructive))",
-					foreground: "hsl(var(--destructive-foreground))",
+					DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+					glow: "var(--accent-glow)",
 				},
 				card: {
-					DEFAULT: "hsl(var(--card))",
-					foreground: "hsl(var(--card-foreground))",
+					DEFAULT: "rgb(var(--card) / <alpha-value>)",
+					hover: "rgb(var(--bg-card-hover) / <alpha-value>)",
+					foreground: "rgb(var(--card-foreground) / <alpha-value>)",
 				},
-				neon: {
-					pink: "hsl(var(--neon-pink))",
-					cyan: "hsl(var(--neon-cyan))",
+				muted: {
+					DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+					foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
 				},
+				dim: "rgb(var(--text-dim) / <alpha-value>)",
+				green: "rgb(var(--green) / <alpha-value>)",
+				red: "rgb(var(--red) / <alpha-value>)",
+				yellow: "rgb(var(--yellow) / <alpha-value>)",
+				blue: "rgb(var(--blue) / <alpha-value>)",
+				purple: "rgb(var(--purple) / <alpha-value>)",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -47,31 +38,29 @@ export default {
 				sm: "calc(var(--radius) - 4px)",
 			},
 			fontFamily: {
-				display: ["var(--font-display)", "system-ui", "sans-serif"],
+				display: ["var(--font-display)", "Georgia", "serif"],
 				sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+				mono: ["var(--font-mono)", "ui-monospace", "monospace"],
 			},
 			backgroundImage: {
-				"grid-neon":
-					"linear-gradient(to right, hsl(var(--neon-cyan) / 0.08) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--neon-pink) / 0.06) 1px, transparent 1px)",
-				"hero-glow":
-					"radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--neon-pink) / 0.35), transparent), radial-gradient(ellipse 60% 40% at 100% 0%, hsl(var(--neon-cyan) / 0.2), transparent), radial-gradient(ellipse 50% 30% at 0% 20%, hsl(var(--neon-cyan) / 0.15), transparent)",
+				"accent-glow":
+					"radial-gradient(ellipse 60% 40% at 70% -10%, var(--accent-glow), transparent)",
 			},
 			boxShadow: {
-				neon: "0 0 20px hsl(var(--neon-pink) / 0.45), 0 0 40px hsl(var(--neon-cyan) / 0.2)",
-				"neon-sm": "0 0 12px hsl(var(--neon-pink) / 0.35)",
+				"accent-sm": "0 0 12px var(--accent-glow)",
+				"accent-md": "0 0 24px var(--accent-glow)",
 			},
 			animation: {
-				"pulse-slow": "pulse-slow 4s ease-in-out infinite",
-				"gradient-shift": "gradient-shift 8s ease infinite",
+				"slide-up": "slideUp 0.6s ease-out both",
+				"slide-up-1": "slideUp 0.7s ease-out 0.1s both",
+				"slide-up-2": "slideUp 0.7s ease-out 0.2s both",
+				"slide-up-3": "slideUp 0.7s ease-out 0.3s both",
+				"slide-up-4": "slideUp 0.7s ease-out 0.4s both",
 			},
 			keyframes: {
-				"pulse-slow": {
-					"0%, 100%": { opacity: "1" },
-					"50%": { opacity: "0.7" },
-				},
-				"gradient-shift": {
-					"0%, 100%": { backgroundPosition: "0% 50%" },
-					"50%": { backgroundPosition: "100% 50%" },
+				slideUp: {
+					from: { opacity: "0", transform: "translateY(24px)" },
+					to: { opacity: "1", transform: "translateY(0)" },
 				},
 			},
 		},

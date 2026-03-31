@@ -1,377 +1,157 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { MusicPlayer } from "@/components/react/MusicPlayer";
-import { buttonVariants } from "@/components/ui/button-variants";
-import { cn } from "@/lib/utils";
+import SectionHeader from "@/components/SectionHeader.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import HighlightBox from "@/components/HighlightBox.astro";
+import Tag from "@/components/Tag.astro";
+import { getCollection } from "astro:content";
 
-const streamUrl = import.meta.env.PUBLIC_STREAM_URL;
+const allProjects = await getCollection("projects");
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
 
-const schedule = [
-	{
-		date: "Fri, Apr 4",
-		title: "Deep Pulse Session",
-		time: "22:00 CET",
-		note: "Progressive & melodic techno",
-	},
-	{
-		date: "Sat, Apr 5",
-		title: "Warehouse Frequencies",
-		time: "23:00 CET",
-		note: "Peak-time energy & acid lines",
-	},
-	{
-		date: "Sun, Apr 6",
-		title: "Sunrise Mix",
-		time: "06:00 CET",
-		note: "Ambient drift into daylight",
-	},
-] as const;
-
-const links = [
-	{
-		name: "Spotify",
-		href: "https://open.spotify.com/",
-		description: "Playlists & releases",
-		icon: "spotify",
-	},
-	{
-		name: "Beatport",
-		href: "https://www.beatport.com/",
-		description: "DJ charts & tracks",
-		icon: "beatport",
-	},
-	{
-		name: "Instagram",
-		href: "https://www.instagram.com/",
-		description: "Behind the decks",
-		icon: "instagram",
-	},
-	{
-		name: "numen.games",
-		href: "https://numen.games",
-		description: "Games & experiments",
-		icon: "game",
-	},
-	{
-		name: "numinia.store",
-		href: "https://numinia.store",
-		description: "Merch & digital",
-		icon: "store",
-	},
-] as const;
+const skills = [
+  "Product Management",
+  "Marketing Strategy",
+  "Audio Engineering",
+  "Video Production",
+  "Startup Launch",
+  "Seed Investing",
+  "Mentoría",
+  "Community Building",
+  "Comunicación",
+  "Audiovisual",
+];
 ---
 
 <Layout>
-	<a
-		href="#main"
-		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-neon-pink focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-background"
-		>Skip to content</a
-	>
+  <!-- Hero -->
+  <section class="relative pb-16 pt-20 sm:pt-32">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <span class="mb-4 inline-block font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent opacity-0 animate-slide-up">
+        Emprendedor · Creador · Conector
+      </span>
 
-	<main id="main">
-		<!-- Hero -->
-		<section
-			class="relative flex min-h-[88vh] flex-col items-center justify-center px-4 pb-20 pt-28 text-center sm:px-6"
-			aria-labelledby="hero-heading"
-		>
-			<div
-				class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/50 to-transparent"
-				aria-hidden="true"
-			/>
-			<p
-				class="font-display text-xs font-semibold uppercase tracking-[0.35em] text-neon-cyan/90 sm:text-sm"
-			>
-				Live radio · DJ sets
-			</p>
-			<h1
-				id="hero-heading"
-				class="font-display mt-6 max-w-4xl bg-gradient-to-br from-white via-white to-neon-cyan/80 bg-clip-text text-5xl font-extrabold leading-[1.05] tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl"
-			>
-				Pablo FM
-			</h1>
-			<p
-				class="mt-5 max-w-xl text-lg text-muted-foreground sm:text-xl md:text-2xl"
-			>
-				Electronic music that moves you
-			</p>
-			<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-				<a
-					href="#now-playing"
-					class={cn(
-						buttonVariants({ variant: "neon", size: "lg" }),
-						"font-display min-h-[3.25rem] min-w-[min(100%,240px)] border-2 px-10 text-sm uppercase tracking-[0.25em] shadow-neon transition hover:scale-[1.02] active:scale-[0.98]",
-					)}
-				>
-					LISTEN LIVE
-				</a>
-			</div>
-		</section>
+      <h1 class="font-display text-5xl tracking-tight text-foreground opacity-0 animate-slide-up-1 sm:text-7xl lg:text-8xl">
+        Pablo <em class="text-accent">FM</em>
+      </h1>
 
-		<!-- Now Playing -->
-		<section
-			id="now-playing"
-			class="scroll-mt-24 border-y border-border/60 bg-background/40 px-4 py-20 backdrop-blur-sm sm:px-6"
-			aria-labelledby="now-playing-heading"
-		>
-			<div class="mx-auto flex max-w-6xl flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-between">
-				<div class="max-w-xl text-center lg:text-left">
-					<h2
-						id="now-playing-heading"
-						class="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
-					>
-						Now Playing
-					</h2>
-					<p class="mt-3 text-muted-foreground">
-						Tap play on the live player — curated electronic grooves, broadcast in real time. Replace the
-						stream URL with your own Icecast or HLS endpoint via
-						<code class="rounded bg-muted px-1.5 py-0.5 text-xs text-neon-cyan">PUBLIC_STREAM_URL</code>.
-					</p>
-				</div>
-				<MusicPlayer
-					client:visible
-					streamUrl={streamUrl || undefined}
-					trackTitle="Midnight Drive"
-					artist="Pablo FM"
-				/>
-			</div>
-		</section>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground opacity-0 animate-slide-up-2">
+        Construyo cosas que conectan personas. Cofundador de Videona, inversor seed en BackFund, mentor en Tetuan Valley — y siempre montando algo nuevo.
+      </p>
 
-		<!-- Schedule -->
-		<section
-			id="schedule"
-			class="scroll-mt-24 px-4 py-20 sm:px-6"
-			aria-labelledby="schedule-heading"
-		>
-			<div class="mx-auto max-w-6xl">
-				<div class="text-center">
-					<h2
-						id="schedule-heading"
-						class="font-display text-3xl font-bold tracking-tight sm:text-4xl"
-					>
-						Upcoming lives / Schedule
-					</h2>
-					<p class="mx-auto mt-3 max-w-2xl text-muted-foreground">
-						Example broadcast windows — tune in for live mixing and exclusive track debuts.
-					</p>
-				</div>
-				<ul
-					class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-					role="list"
-				>
-					{
-						schedule.map((item) => (
-							<li>
-								<article class="group h-full rounded-xl border border-border/80 bg-card/40 p-6 transition hover:border-neon-pink/40 hover:shadow-neon-sm">
-									<p class="font-display text-xs font-semibold uppercase tracking-widest text-neon-cyan">
-										{item.date}
-									</p>
-									<h3 class="font-display mt-3 text-xl font-bold text-foreground">
-										{item.title}
-									</h3>
-									<p class="mt-2 text-sm font-medium text-neon-pink">{item.time}</p>
-									<p class="mt-3 text-sm text-muted-foreground">{item.note}</p>
-								</article>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-		</section>
+      <div class="mt-8 flex flex-wrap gap-3 opacity-0 animate-slide-up-3">
+        <a
+          href="/proyectos"
+          class="inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+        >
+          Ver proyectos
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+        <a
+          href="/contacto"
+          class="inline-flex h-11 items-center rounded-lg border border-border px-6 text-sm font-semibold text-foreground transition-colors hover:bg-card hover:text-accent"
+        >
+          Contacto
+        </a>
+      </div>
 
-		<!-- About -->
-		<section
-			class="border-y border-border/60 bg-background/30 px-4 py-20 backdrop-blur-sm sm:px-6"
-			aria-labelledby="about-heading"
-		>
-			<div
-				class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center"
-			>
-				<div class="order-2 lg:order-1">
-					<h2
-						id="about-heading"
-						class="font-display text-3xl font-bold tracking-tight sm:text-4xl"
-					>
-						About me
-					</h2>
-					<div class="mt-6 space-y-4 text-muted-foreground">
-						<p>
-							I am Pablo FM — DJ, producer, and radio host obsessed with forward motion: driving grooves,
-							lush pads, and peak-time moments that hit like a strobe in the dark. From deep house to
-							breaks and techno, every set is built for the floor and fine-tuned for headphones.
-						</p>
-						<p>
-							This site is the hub for live broadcasts, schedules, and links to music and side projects.
-							Whether you are here for a late-night session or a sunrise blend, welcome to the signal.
-						</p>
-					</div>
-				</div>
-				<div class="order-1 lg:order-2">
-					<div
-						class="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-2xl border border-neon-pink/30 shadow-neon sm:max-w-none"
-					>
-						<img
-							src="https://images.unsplash.com/photo-1598387993441-a364f854c3e8?auto=format&fit=crop&w=900&q=80"
-							alt="Pablo FM at the decks in a club with cyan and magenta lights"
-							class="h-full w-full object-cover"
-							width="900"
-							height="1125"
-							loading="lazy"
-							decoding="async"
-						/>
-						<div
-							class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"
-							aria-hidden="true"
-						/>
-					</div>
-				</div>
-			</div>
-		</section>
+      <!-- Meta info -->
+      <div class="mt-12 flex flex-wrap gap-8 font-mono text-[0.75rem] text-dim opacity-0 animate-slide-up-4">
+        <div>Base <span class="text-muted-foreground">Madrid</span></div>
+        <div>Focus <span class="text-muted-foreground">Startups & Producto</span></div>
+        <div>Status <span class="text-accent">Disponible</span></div>
+      </div>
+    </div>
+  </section>
 
-		<!-- Links -->
-		<section class="px-4 py-20 sm:px-6" aria-labelledby="links-heading">
-			<div class="mx-auto max-w-6xl">
-				<div class="text-center">
-					<h2
-						id="links-heading"
-						class="font-display text-3xl font-bold tracking-tight sm:text-4xl"
-					>
-						Links
-					</h2>
-					<p class="mx-auto mt-3 max-w-2xl text-muted-foreground">
-						Music, socials, and creative projects — all in one place.
-					</p>
-				</div>
-				<ul
-					class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-					role="list"
-				>
-					{
-						links.map((link) => (
-							<li>
-								<a
-									href={link.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="flex h-full flex-col rounded-xl border border-border/80 bg-card/30 p-6 transition hover:border-neon-cyan/50 hover:bg-card/50 hover:shadow-neon-sm"
-								>
-									<div class="flex items-start gap-4">
-										<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-neon-pink/30 bg-neon-pink/10 text-neon-pink">
-											{link.icon === "spotify" && (
-												<svg
-													class="h-5 w-5"
-													viewBox="0 0 24 24"
-													fill="currentColor"
-													aria-hidden="true"
-												>
-													<path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-												</svg>
-											)}
-											{link.icon === "beatport" && (
-												<svg
-													class="h-5 w-5"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.75"
-													aria-hidden="true"
-												>
-													<circle cx="12" cy="12" r="9" />
-													<circle cx="12" cy="12" r="3" fill="currentColor" />
-												</svg>
-											)}
-											{link.icon === "instagram" && (
-												<svg
-													class="h-5 w-5"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.75"
-													aria-hidden="true"
-												>
-													<rect x="3" y="3" width="18" height="18" rx="5" />
-													<circle cx="12" cy="12" r="4" />
-													<circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-												</svg>
-											)}
-											{link.icon === "game" && (
-												<svg
-													class="h-5 w-5"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.75"
-													aria-hidden="true"
-												>
-													<path d="M6 11h4M8 9v4M15 12h2M16 10v4" />
-													<rect x="2" y="6" width="20" height="12" rx="3" />
-												</svg>
-											)}
-											{link.icon === "store" && (
-												<svg
-													class="h-5 w-5"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.75"
-													aria-hidden="true"
-												>
-													<path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" />
-													<path d="M8 9V7a4 4 0 0 1 8 0v2" />
-												</svg>
-											)}
-										</span>
-										<div>
-											<span class="font-display text-lg font-semibold text-foreground">
-												{link.name}
-											</span>
-											<p class="mt-1 text-sm text-muted-foreground">{link.description}</p>
-										</div>
-									</div>
-									<span class="mt-4 text-xs font-medium uppercase tracking-wider text-neon-cyan">
-										Open →
-									</span>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-		</section>
+  <!-- Highlight -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <HighlightBox>
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          <strong class="text-accent">Mi esencia:</strong> Constructor + Conector. No soy solo un emprendedor — soy alguien que crea cosas (productos, comunidades, experiencias) y conecta personas en el proceso. Este sitio es mi cuartel general digital.
+        </p>
+      </HighlightBox>
+    </div>
+  </section>
 
-		<!-- Footer -->
-		<footer
-			class="border-t border-border/60 px-4 py-12 sm:px-6"
-			role="contentinfo"
-		>
-			<div
-				class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left"
-			>
-				<div>
-					<p class="font-display text-sm font-semibold text-foreground">Pablo FM</p>
-					<p class="mt-1 text-sm text-muted-foreground">
-						© {new Date().getFullYear()} Pablo FM. All rights reserved.
-					</p>
-				</div>
-				<nav aria-label="Footer">
-					<ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
-						<li>
-							<a
-								href="https://pablofm.com"
-								class="text-muted-foreground transition hover:text-neon-cyan"
-								>pablofm.com</a
-							>
-						</li>
-						<li>
-							<a href="#now-playing" class="text-muted-foreground transition hover:text-neon-pink"
-								>Listen</a
-							>
-						</li>
-						<li>
-							<a href="#schedule" class="text-muted-foreground transition hover:text-neon-cyan">Schedule</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-		</footer>
-	</main>
+  <!-- Featured Projects -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Proyectos destacados"
+        title="Cosas que he montado"
+        description="Algunos de los proyectos en los que he puesto más energía."
+      />
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            role={project.data.role}
+            href={project.data.href}
+            tags={project.data.tags}
+            status={project.data.status}
+          />
+        ))}
+      </div>
+
+      <div class="mt-8 text-center">
+        <a
+          href="/proyectos"
+          class="inline-flex items-center gap-2 font-mono text-sm text-muted-foreground transition-colors hover:text-accent"
+        >
+          Ver todos los proyectos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Skills"
+        title="Lo que sé hacer"
+      />
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <Tag text={skill} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-border py-20">
+    <div class="mx-auto max-w-[1100px] px-6 text-center">
+      <h2 class="font-display text-3xl text-foreground sm:text-4xl">
+        ¿Hablamos?
+      </h2>
+      <p class="mx-auto mt-4 max-w-md text-muted-foreground">
+        Si tienes un proyecto interesante, quieres colaborar o simplemente charlar — escríbeme.
+      </p>
+      <a
+        href="/contacto"
+        class="mt-8 inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+      >
+        Contactar
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+    </div>
+  </section>
 </Layout>
