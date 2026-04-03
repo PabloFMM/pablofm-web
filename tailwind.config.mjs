@@ -45,6 +45,8 @@ export default {
 			backgroundImage: {
 				"accent-glow":
 					"radial-gradient(ellipse 60% 40% at 70% -10%, var(--accent-glow), transparent)",
+					"veil-glow":
+						"radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent)",
 			},
 			boxShadow: {
 				"accent-sm": "0 0 12px var(--accent-glow)",
