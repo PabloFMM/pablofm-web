@@ -5,6 +5,7 @@ import ProjectCard from "@/components/ProjectCard.astro";
 import HighlightBox from "@/components/HighlightBox.astro";
 import Tag from "@/components/Tag.astro";
 import { getCollection } from "astro:content";
+import { profile } from "@/data/profile";
 
 const allProjects = await getCollection("projects");
 const featuredProjects = allProjects
@@ -64,7 +65,7 @@ const skills = [
       <div class="mt-12 flex flex-wrap gap-8 font-mono text-[0.75rem] text-dim opacity-0 animate-slide-up-4">
         <div>Base <span class="text-muted-foreground">Madrid</span></div>
         <div>Focus <span class="text-muted-foreground">Startups & Producto</span></div>
-        <div>Status <span class="text-accent">Disponible</span></div>
+        <div>Status <span class:list={[profile.statusActive ? "text-accent" : "text-muted-foreground"]}>{profile.status}</span></div>
       </div>
     </div>
   </section>
