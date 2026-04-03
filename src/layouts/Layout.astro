@@ -21,6 +21,7 @@ const {
 
 const siteUrl = "https://pablofm.com";
 const canonical = `${siteUrl}${canonicalPath}`;
+const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
 ---
 
 <!doctype html>
@@ -40,13 +41,13 @@ const canonical = `${siteUrl}${canonicalPath}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_ES" />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:image" content={resolvedOgImage} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <meta name="twitter:image" content={resolvedOgImage} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
