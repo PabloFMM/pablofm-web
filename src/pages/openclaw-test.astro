@@ -30,79 +30,84 @@ import PageHero from "@/components/PageHero.astro";
       <!-- Demo content area — editado por Centinela-01 -->
       <div id="demo-content">
 
-        <!-- RUSOWSKY -->
+        <!-- ORACLES -->
         <div class="mb-4 flex items-center gap-3">
-          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent">Artista</span>
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent">Numen Games</span>
           <span class="h-px flex-1 bg-border"></span>
         </div>
 
-        <h2 class="font-display text-5xl text-foreground mb-2">Rusowsky</h2>
-        <p class="font-mono text-sm text-muted-foreground mb-8">Ruslán Mediavilla · Valladolid, 1999 · Madrid</p>
-
-        <p class="text-muted-foreground leading-relaxed max-w-prose mb-12">
-          Cantante, compositor y productor español criado en Fuenlabrada. Formación clásica desde los 4 años,
-          influenciado por Tyler, the Creator. Su música mezcla bedroom pop, R&B, reggaetón alternativo
-          y melancolía digital. Uno de los nombres más interesantes del indie español contemporáneo.
+        <h2 class="font-display text-4xl text-foreground mb-2">Los Oráculos</h2>
+        <p class="text-muted-foreground text-sm mb-10 max-w-prose">
+          Los fundadores de Numen Games. Emprendedores unidos por la amistad, el juego y la visión de transformar cómo trabajan las organizaciones.
         </p>
 
-        <!-- Hitos -->
-        <div class="grid gap-4 sm:grid-cols-3 mb-12">
-          <div class="rounded-lg border border-border bg-card p-5">
-            <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-2">Debut</p>
-            <p class="font-display text-xl text-foreground">2019</p>
-            <p class="text-xs text-muted-foreground mt-1">Primeros temas en plataformas digitales</p>
-          </div>
-          <div class="rounded-lg border border-border bg-card p-5">
-            <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-2">Álbum debut</p>
-            <p class="font-display text-xl text-foreground">Daisy</p>
-            <p class="text-xs text-muted-foreground mt-1">Mayo 2025 · 13 canciones</p>
-          </div>
-          <div class="rounded-lg border border-border bg-card p-5">
-            <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-2">Gira mundial</p>
-            <p class="font-display text-xl text-foreground">Daisy Tour</p>
-            <p class="text-xs text-muted-foreground mt-1">2025–2026</p>
-          </div>
+        <!-- Foto de grupo -->
+        <div class="rounded-xl overflow-hidden border border-border mb-12">
+          <img
+            src="/oracles.jpg"
+            alt="Pablo FM y Daniel Garrido — Oráculos de Numen Games"
+            class="w-full object-cover max-h-[480px]"
+          />
         </div>
 
-        <!-- Colaboraciones -->
-        <div class="mb-4 flex items-center gap-3">
-          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Colaboraciones destacadas</span>
-          <span class="h-px flex-1 bg-border"></span>
-        </div>
-        <div class="flex flex-wrap gap-2 mb-12">
-          {["C. Tangana", "Aitana", "Dellafuente", "Najwa", "Ralphie Choo", "Jean Dawson", "Las Ketchup", "La Zowi", "Kevin Abstract"].map((name) => (
-            <span class="rounded-full border border-border bg-background px-3 py-1 font-mono text-[0.65rem] text-muted-foreground">
-              {name}
-            </span>
-          ))}
+        <!-- Cards de Oráculos -->
+        <div class="grid gap-6 sm:grid-cols-2 mb-12">
+
+          <!-- Pablo FM -->
+          <div class="rounded-xl border border-border bg-card p-8">
+            <div class="mb-4">
+              <span class="inline-block rounded-full bg-accent/10 px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-accent">CEO & Oracle</span>
+            </div>
+            <h3 class="font-display text-2xl text-foreground mb-1">Pablo <em class="text-accent">FM</em></h3>
+            <p class="font-mono text-xs text-dim mb-4">Pablo Fernández-Maquieira</p>
+            <p class="text-sm leading-relaxed text-muted-foreground mb-6">
+              Emprendedor, cofundador de Videona, seed investor en BackFund y mentor en Tetuan Valley.
+              Oracle y visión estratégica de Numen Games.
+            </p>
+            <div class="flex gap-3">
+              <a href="https://www.linkedin.com/in/pablofm" target="_blank" rel="noopener noreferrer"
+                class="font-mono text-xs text-muted-foreground hover:text-accent transition-colors">LinkedIn ↗</a>
+              <a href="https://x.com/Pablo_FMM" target="_blank" rel="noopener noreferrer"
+                class="font-mono text-xs text-muted-foreground hover:text-accent transition-colors">X ↗</a>
+              <a href="https://pablofm.com" target="_blank" rel="noopener noreferrer"
+                class="font-mono text-xs text-muted-foreground hover:text-accent transition-colors">Web ↗</a>
+            </div>
+          </div>
+
+          <!-- Daniel Garrido -->
+          <div class="rounded-xl border border-border bg-card p-8">
+            <div class="mb-4">
+              <span class="inline-block rounded-full bg-accent/10 px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-accent">Analytics Wizard & Oracle</span>
+            </div>
+            <h3 class="font-display text-2xl text-foreground mb-1">Daniel <em class="text-accent">Garrido</em></h3>
+            <p class="font-mono text-xs text-dim mb-4">Daniel Pérez Garrido</p>
+            <p class="text-sm leading-relaxed text-muted-foreground mb-6">
+              Especialista en data analytics y visualización con 16+ años de experiencia.
+              Explora Web3, blockchain e IA generativa como Oracle de Numen Games.
+            </p>
+            <div class="flex gap-3">
+              <a href="https://es.linkedin.com/in/daniel-garrido-p%C3%A9rez" target="_blank" rel="noopener noreferrer"
+                class="font-mono text-xs text-muted-foreground hover:text-accent transition-colors">LinkedIn ↗</a>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Géneros -->
-        <div class="mb-4 flex items-center gap-3">
-          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Géneros</span>
-          <span class="h-px flex-1 bg-border"></span>
-        </div>
-        <div class="flex flex-wrap gap-2 mb-12">
-          {["Bedroom pop", "R&B", "Reggaetón alternativo", "Trap", "Experimental", "Pop electrónico"].map((g) => (
-            <span class="rounded-full border border-accent/30 bg-accent/5 px-3 py-1 font-mono text-[0.65rem] text-accent">
-              {g}
-            </span>
-          ))}
-        </div>
-
-        <!-- CTA Spotify -->
+        <!-- CTA -->
         <a
-          href="https://open.spotify.com/artist/3Pm2YSZ0zE6nXNPRin3P3L"
+          href="https://numen.games"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
         >
-          Escuchar en Spotify
+          Conoce Numen Games
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12"/>
             <polyline points="12 5 19 12 12 19"/>
           </svg>
         </a>
+
+
 
       </div>
 
