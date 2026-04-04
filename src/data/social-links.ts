@@ -6,17 +6,7 @@ export const socialLinks = [
   },
   {
     label: "X / Twitter",
-    href: "https://x.com/pablofm",
+    href: "https://x.com/Pablo_FMM",
     icon: "twitter",
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/maquieirapablo",
-    icon: "instagram",
-  },
-  {
-    label: "SoundCloud",
-    href: "https://soundcloud.com/pablo_fm",
-    icon: "soundcloud",
   },
 ] as const;
