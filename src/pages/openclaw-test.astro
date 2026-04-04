@@ -1,0 +1,46 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+---
+
+<Layout
+  title="OpenClawTest — Pablo FM"
+  description="Sandbox de demos en vivo. Aquí experimento con Centinela-01 en tiempo real."
+  canonicalPath="/openclaw-test"
+  activeNav="openclaw-test"
+>
+  <PageHero
+    label="🧪 Demo en vivo"
+    title="OpenClawTest"
+    description="Este espacio es un sandbox. Lo que ves aquí lo edita Centinela-01 en tiempo real."
+  />
+
+  <section class="pb-20">
+    <div class="mx-auto max-w-[1100px] px-6">
+
+      <!-- Info box -->
+      <div class="rounded-xl border border-accent/20 bg-accent/5 p-6 mb-12">
+        <p class="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent mb-2">¿Qué es esto?</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          Una demostración en vivo de <strong class="text-foreground">Centinela-01</strong>, el agente digital de Numen Games.
+          Le doy una instrucción por Telegram y edita esta página en segundos — sin tocar código, sin abrir un editor.
+        </p>
+      </div>
+
+      <!-- Demo content area — aquí van los cambios de demo -->
+      <div id="demo-content">
+
+        <h2 class="font-display text-2xl text-foreground mb-6">
+          Contenido de demo
+        </h2>
+
+        <p class="text-muted-foreground leading-relaxed max-w-prose">
+          Esta sección está lista para ser editada en vivo. Cuando empiece la demo, 
+          Centinela-01 modificará este contenido según las instrucciones que yo le dé.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+</Layout>
