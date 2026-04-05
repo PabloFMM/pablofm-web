@@ -6,4 +6,5 @@ export const navItems = [
   { label: "CAO", href: "/cao", id: "cao" },
   { label: "Misiones", href: "/misiones", id: "misiones" },
   { label: "Reportes", href: "/reportes", id: "reportes" },
+  { label: "Planos", href: "/planos", id: "planos" },
 ] as const;
