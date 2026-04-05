@@ -4,4 +4,5 @@ export const navItems = [
   { label: "Contacto", href: "/contacto", id: "contacto" },
   { label: "OpenClawTest", href: "/openclaw-test", id: "openclaw-test" },
   { label: "CAO", href: "/cao", id: "cao" },
+  { label: "Misiones", href: "/misiones", id: "misiones" },
 ] as const;
