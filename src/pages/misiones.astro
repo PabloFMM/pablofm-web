@@ -1,8 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import PageHero from "@/components/PageHero.astro";
+import { misiones as misionesData } from "@/data/misiones";
 
-// Mockup de misiones — fuente futura: repo numinia-agents via GitHub API
+// Misiones completas desde data file — las del tablero incluyen todas las 50
+const misionesConDetalle = misionesData.map(m => m.id);
 const misiones = [
   // PRODUCTO
   { id: "MIS-001", titulo: "Definir el MVP de Numinia en una página", area: "Producto", gremio: "Alquimistas", tipo: "biológico", prioridad: "crítica", esfuerzo: "S", estado: "backlog" },
@@ -126,20 +128,27 @@ const criticas = sorted.filter(m => m.prioridad === "crítica");
       </div>
 
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-12">
-        {criticas.map((m) => (
-          <div class="rounded-lg border border-red/20 bg-red/5 p-4 hover:bg-red/10 transition-colors">
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-mono text-[0.6rem] text-red">{m.id}</span>
-              <span class="font-mono text-[0.6rem] text-dim">{tipoIcon[m.tipo]} {m.esfuerzo}</span>
-            </div>
-            <p class="text-sm font-medium text-foreground leading-snug mb-2">{m.titulo}</p>
-            <div class="flex items-center gap-2">
-              <span class="font-mono text-[0.55rem] text-dim">{m.area}</span>
-              <span class="text-dim">·</span>
-              <span class="font-mono text-[0.55rem] text-dim">{m.gremio}</span>
-            </div>
-          </div>
-        ))}
+        {criticas.map((m) => {
+          const hasDetail = misionesConDetalle.includes(m.id);
+          const Tag = hasDetail ? 'a' : 'div';
+          return (
+            <a href={hasDetail ? `/misiones/${m.id.toLowerCase()}` : undefined} class="rounded-lg border border-red/20 bg-red/5 p-4 hover:bg-red/10 transition-colors block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-mono text-[0.6rem] text-red">{m.id}</span>
+                <span class="font-mono text-[0.6rem] text-dim">{tipoIcon[m.tipo]} {m.esfuerzo}</span>
+              </div>
+              <p class="text-sm font-medium text-foreground leading-snug mb-2">{m.titulo}</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-[0.55rem] text-dim">{m.area}</span>
+                  <span class="text-dim">·</span>
+                  <span class="font-mono text-[0.55rem] text-dim">{m.gremio}</span>
+                </div>
+                {hasDetail && <span class="font-mono text-[0.55rem] text-red">Ver detalle →</span>}
+              </div>
+            </a>
+          );
+        })}
       </div>
 
       <!-- Por área -->
@@ -153,24 +162,27 @@ const criticas = sorted.filter(m => m.prioridad === "crítica");
               <span class="font-mono text-[0.6rem] text-dim">{misionesArea.length} misiones</span>
             </div>
             <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {misionesArea.map((m) => (
-                <div class="rounded-lg border border-border bg-card p-4 hover:bg-card-hover transition-colors">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="font-mono text-[0.6rem] text-dim">{m.id}</span>
-                    <div class="flex items-center gap-1">
-                      <span class="font-mono text-[0.6rem] text-dim">{tipoIcon[m.tipo]}</span>
-                      <span class:list={["inline-flex rounded-full px-1.5 py-0.5 font-mono text-[0.55rem] font-medium", prioridadColor[m.prioridad]]}>
-                        {prioridadIcon[m.prioridad]} {m.prioridad}
-                      </span>
+              {misionesArea.map((m) => {
+                const hasDetail = misionesConDetalle.includes(m.id);
+                return (
+                  <a href={hasDetail ? `/misiones/${m.id.toLowerCase()}` : undefined} class="rounded-lg border border-border bg-card p-4 hover:bg-card-hover transition-colors block">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="font-mono text-[0.6rem] text-dim">{m.id}</span>
+                      <div class="flex items-center gap-1">
+                        <span class="font-mono text-[0.6rem] text-dim">{tipoIcon[m.tipo]}</span>
+                        <span class:list={["inline-flex rounded-full px-1.5 py-0.5 font-mono text-[0.55rem] font-medium", prioridadColor[m.prioridad]]}>
+                          {prioridadIcon[m.prioridad]} {m.prioridad}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <p class="text-sm text-foreground leading-snug mb-2">{m.titulo}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="font-mono text-[0.55rem] text-dim">{m.gremio}</span>
-                    <span class="font-mono text-[0.55rem] text-dim">{m.esfuerzo}</span>
-                  </div>
-                </div>
-              ))}
+                    <p class="text-sm text-foreground leading-snug mb-2">{m.titulo}</p>
+                    <div class="flex items-center justify-between">
+                      <span class="font-mono text-[0.55rem] text-dim">{m.gremio}</span>
+                      <span class="font-mono text-[0.55rem] text-dim">{hasDetail ? '→' : m.esfuerzo}</span>
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </div>
         );
