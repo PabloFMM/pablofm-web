@@ -7,4 +7,5 @@ export const navItems = [
   { label: "Misiones", href: "/misiones", id: "misiones" },
   { label: "Reportes", href: "/reportes", id: "reportes" },
   { label: "Planos", href: "/planos", id: "planos" },
+  { label: "Decisiones", href: "/decisiones", id: "decisiones" },
 ] as const;
