@@ -120,12 +120,19 @@ export const misiones: Mision[] = [
     pragmatico: "Primera fuente de financiación externa sin dilución de equity."
   },
   {
-    id: "MIS-037", titulo: "Crear repositorio numinia-agents",
-    area: "CAO", gremio: "Centinelas", tipo: "digital", prioridad: "crítica", esfuerzo: "M", estado: "backlog",
-    historia: "Como coordinador CAO, quiero inicializar el repositorio numinia-agents, para tener la fuente de verdad del sistema de agentes.",
-    criterios: ["Repo creado con estructura: /agents, /missions, /logs, /protocols, /docs", "README.md inicial con propósito y arquitectura", "Licencia CC0 y .gitignore configurados", "Branch protection rules activadas"],
-    epistemico: "Establece el espacio de conocimiento canónico de la inteligencia operativa de Numen Games.",
-    pragmatico: "Sin repositorio no hay colaboración ni historial."
+    id: "MIS-037", titulo: "Crear repositorio numinia-agents (Archive Summa)",
+    area: "CAO", gremio: "Centinelas", tipo: "digital", prioridad: "crítica", esfuerzo: "L", estado: "done",
+    historia: "Como coordinador CAO, quiero inicializar el repositorio numinia-agents con la arquitectura Archive Summa, para tener la fuente de verdad canónica del Narrative Work OS.",
+    criterios: ["Repo numinia-digital-agents creado y público (CC0)", "43 documentos en 8 fondos documentales", "SOUL + OPERATOR + STATUS de Nimrod y Adonaz", "5 protocolos operativos (P-001 a P-005)", "Template de misiones v2 con Ejecución Real", "ADRs, blueprints y governance completos"],
+    epistemico: "El Archive Summa no es solo un repo. Es el lugar donde el sistema ocurre. La diferencia entre documentar y habitar un sistema es ontológica, no técnica.",
+    pragmatico: "El Narrative Work OS tiene hogar permanente. Los agentes pueden hacer git pull y operar con contexto completo.",
+    ejecucion: {
+      tecnologiaUsada: "GitHub público + git CLI + diseño multi-agente (Nimrod + Adonaz + Alquimista-01)",
+      porQuéDivergió: "El diseño evolucionó de estructura simple a arquitectura B+C+D validada por análisis multi-agente y 100 simulaciones mentales.",
+      aprendizajeClave: "El Archive Summa no documenta el sistema. Es el lugar donde el sistema ocurre.",
+      fechaCierre: "2026-04-06",
+      agenteEjecutor: "Nimrod (Centinela-01) + Adonaz"
+    }
   },
   {
     id: "MIS-038", titulo: "Diseñar Briefing Protocol v1.0",
