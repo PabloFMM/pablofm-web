@@ -189,4 +189,17 @@ export const misiones: Mision[] = [
       agenteEjecutor: "Nimrod (Centinela-01)"
     }
   },
+  {
+    id: "MIS-054", titulo: "Acceso multi-Oráculo a Nimrod vía Telegram",
+    area: "CAO", gremio: "Centinelas", tipo: "digital", prioridad: "alta", esfuerzo: "S", estado: "en-curso",
+    historia: "Como Oráculo de Numen Games, quiero poder hablar directamente con Nimrod vía Telegram, para participar en la CAO sin necesitar acceso técnico al servidor.",
+    criterios: [
+      "Primer Oráculo (@Wolfstein_Wagen) añadido como sender autorizado",
+      "El Oráculo puede enviar mensajes a Nimrod y recibir respuestas",
+      "Protocolo definido: cómo se añaden nuevos Oráculos",
+      "Todos los Oráculos activos con acceso (María, Christian, Clio, Dani)",
+    ],
+    epistemico: "Valida si el sistema CAO puede operar con múltiples humanos interactuando con el mismo agente, y cómo gestionar el contexto compartido vs. privado.",
+    pragmatico: "Los Oráculos pueden delegar tareas a Nimrod directamente, sin depender de Pablo como intermediario. La CAO escala."
+  },
 ];
