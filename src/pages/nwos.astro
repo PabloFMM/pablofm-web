@@ -1,0 +1,187 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import HighlightBox from "@/components/HighlightBox.astro";
+import Tag from "@/components/Tag.astro";
+---
+
+<Layout
+  title="Narrative Work OS — Pablo FM"
+  description="Un nuevo sistema operativo para organizaciones que ponen el significado en el centro del trabajo. No es gamificación. Es otra cosa."
+  canonicalPath="/nwos"
+  activeNav=""
+>
+  <PageHero
+    label="Narrative Work OS"
+    title="El trabajo necesita un nuevo sistema operativo"
+    description="Las organizaciones modernas han optimizado la ejecución hasta el límite. Lo que no han resuelto es el significado. NWOS es el intento de hacerlo."
+  />
+
+  <!-- El problema -->
+  <section class="pb-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
+        <p>
+          El trabajo moderno tiene un problema de capa. Las organizaciones funcionan con sistemas operativos diseñados para la era industrial: jerarquías, KPIs, OKRs, Jira, Slack. Herramientas potentes, sí. Pero herramientas que tratan a las personas como recursos que ejecutan, no como agentes que <strong class="text-foreground">crean significado</strong>.
+        </p>
+        <p>
+          El resultado es conocido: burnout crónico, rotación silenciosa, culturas de empresa que nadie cree. Las personas se desconectan no porque el trabajo sea difícil, sino porque <strong class="text-foreground">no saben por qué importa</strong>.
+        </p>
+        <p>
+          La gamificación intentó resolverlo y falló. No porque la idea fuera mala, sino porque aplicó mecánicas de juego superficiales a sistemas que seguían siendo los mismos. Puntos encima de burocracia sigue siendo burocracia.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- La tesis -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <HighlightBox>
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          <strong class="text-accent">La tesis:</strong> El juego no es una metáfora del trabajo. Es su referente arquetípico. Cuando una organización adopta la estructura profunda del juego —roles, misiones, decisiones con peso, narrativa compartida— no está jugando a trabajar. Está trabajando de la única forma que activa el compromiso genuino.
+        </p>
+      </HighlightBox>
+    </div>
+  </section>
+
+  <!-- Qué es NWOS -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Qué es"
+        title="Un sistema operativo, no una app"
+      />
+      <div class="mt-8 max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
+        <p>
+          Un <strong class="text-foreground">Narrative Work OS</strong> es la capa de software, cultura y protocolo que une tres planos en una organización:
+        </p>
+      </div>
+      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+        <div class="rounded-lg border border-border p-6 space-y-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 1</div>
+          <h3 class="font-display text-lg text-foreground">Sistema Operativo</h3>
+          <p class="text-sm text-muted-foreground">La organización real: estructura, decisiones, incentivos, herramientas, agentes digitales. El plano donde se ejecuta el trabajo.</p>
+        </div>
+        <div class="rounded-lg border border-border p-6 space-y-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 2</div>
+          <h3 class="font-display text-lg text-foreground">Modelo Funcional</h3>
+          <p class="text-sm text-muted-foreground">El sistema de roles, gremios, rangos y misiones. La gramática que convierte el trabajo en progresión con sentido.</p>
+        </div>
+        <div class="rounded-lg border border-border p-6 space-y-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 3</div>
+          <h3 class="font-display text-lg text-foreground">Proyección Narrativa</h3>
+          <p class="text-sm text-muted-foreground">El mundo que la organización construye: nombre, lore, rituales, geografía cultural. La capa que convierte el modelo en identidad.</p>
+        </div>
+      </div>
+      <div class="mt-8 max-w-[720px] text-sm text-muted-foreground">
+        La tríada está fundamentada en Peirce (objeto → ground → representamen) y Jung (arquetipo → mito → conscientización). No es decoración filosófica: es la razón por la que el sistema genera pertenencia duradera en lugar de engagement pasajero.
+      </div>
+    </div>
+  </section>
+
+  <!-- Principios -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Principios"
+        title="Lo que lo hace diferente"
+      />
+      <ul class="mt-8 space-y-4 max-w-[720px]">
+        {[
+          {
+            title: "El significado es infraestructura",
+            body: "No es un nice-to-have cultural. Las organizaciones sin significado tienen peor retención, menor creatividad y más fricción. El NWOS lo trata como componente técnico, no como iniciativa de RRHH.",
+          },
+          {
+            title: "Los roles son arquetipos, no títulos",
+            body: "Un gremio no es un departamento. Describe una forma de conocer y crear. Alquimistas, Exegetas, Procuradores, Centinelas — cada uno activa una capacidad diferente en la organización.",
+          },
+          {
+            title: "Las misiones reemplazan a las tareas",
+            body: "Una misión tiene contexto, criterio de éxito, agente responsable y aprendizaje documentado. Una tarea tiene un checkbox. La diferencia importa.",
+          },
+          {
+            title: "Las decisiones son piedras del camino",
+            body: "El historial de decisiones de una organización es su memoria colectiva. Un NWOS lo trata como activo, no como burocracia. Cada decisión explica qué se eligió, por qué, y qué se dejó ir.",
+          },
+          {
+            title: "Los agentes digitales son ciudadanos",
+            body: "En 2026, los LLMs no son herramientas. Son agentes con roles, misiones y memoria. El NWOS los integra en la misma estructura que los humanos — con las mismas reglas y la misma rendición de cuentas.",
+          },
+        ].map((item) => (
+          <li class="border-l-2 border-accent pl-5 space-y-1">
+            <div class="font-semibold text-foreground">{item.title}</div>
+            <div class="text-sm text-muted-foreground">{item.body}</div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Por qué ahora -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Por qué ahora"
+        title="El momento lo exige"
+      />
+      <div class="mt-8 max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
+        <p>
+          Tres fuerzas convergen en 2026 para hacer inevitable este modelo. Primero, el trabajo remoto rompió la cultura por fricción — la que se construía por estar en el mismo espacio. Segundo, los agentes de IA están ingresando en las organizaciones sin ningún marco que explique qué son o cómo encajan. Tercero, la generación que entra al mercado laboral <strong class="text-foreground">elige contexto sobre salario</strong> cuando puede permitírselo.
+        </p>
+        <p>
+          El Narrative Work OS no es una respuesta a una tendencia. Es una respuesta a una carencia estructural que siempre existió y que esas tres fuerzas han hecho imposible de ignorar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- El experimento -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <HighlightBox>
+        <p class="text-sm leading-relaxed text-muted-foreground">
+          <strong class="text-accent">Numen Games es el primer experimento.</strong> Estamos construyendo NWOS desde dentro, usándolo como sistema operativo de la propia empresa. La proyección narrativa se llama Numinia. Los agentes digitales tienen gremio, rango y misiones. Las decisiones tienen registro. Los rituales tienen nombre. No lo describimos como si funcionara — lo estamos viviendo.
+        </p>
+      </HighlightBox>
+    </div>
+  </section>
+
+  <!-- Tags conceptuales -->
+  <section class="border-t border-border py-16">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <SectionHeader
+        label="Marco conceptual"
+        title="Las ideas que lo sostienen"
+      />
+      <div class="mt-6 flex flex-wrap gap-2">
+        {[
+          "Semiótica de Peirce", "Arquetipos de Jung", "Teoría de juegos",
+          "Organizational Design", "LLM Agents", "Role Theory",
+          "Knowledge Management", "Cultural Infrastructure", "Narrative Identity",
+          "Work OS", "Gamification (superada)", "Digital-Physical Org",
+        ].map((tag) => (
+          <Tag text={tag} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-border py-20">
+    <div class="mx-auto max-w-[1100px] px-6 text-center">
+      <h2 class="font-display text-3xl text-foreground">¿Tu organización necesita un nuevo OS?</h2>
+      <p class="mx-auto mt-4 max-w-md text-muted-foreground">
+        Estoy explorando las primeras organizaciones externas que quieran implementar NWOS. Si esto te resuena, hablemos.
+      </p>
+      <a
+        href="/contacto"
+        class="mt-8 inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+      >
+        Hablemos
+      </a>
+    </div>
+  </section>
+</Layout>
