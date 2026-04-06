@@ -59,7 +59,7 @@ export const misiones: Mision[] = [
   },
   {
     id: "MIS-016", titulo: "Nginx + SSL para todos los servicios del servidor",
-    area: "Infraestructura", gremio: "Centinelas", tipo: "digital", prioridad: "crítica", esfuerzo: "M", estado: "backlog",
+    area: "Infraestructura", gremio: "Centinelas", tipo: "digital", prioridad: "crítica", esfuerzo: "M", estado: "done",
     historia: "Como operador, quiero todos los servicios accesibles via HTTPS con subdominios propios, para que nada sea accesible por IP:puerto.",
     criterios: ["Nginx instalado como reverse proxy", "SSL via Let's Encrypt para analytics.pablofm.com y cal.pablofm.com", "Puertos 3001/3002 cerrados externamente", "Renovación SSL automática"],
     epistemico: "Revela la madurez real de la infraestructura actual.",
@@ -136,5 +136,29 @@ export const misiones: Mision[] = [
     criterios: ["API de Anthropic conectada para datos de uso real", "Coste por misión registrado en logs", "Coste diario visible en reporte de las 8am", "Dashboard /cao actualizado con coste real"],
     epistemico: "Sin datos de coste reales, no se puede optimizar.",
     pragmatico: "Diferencia entre gasto controlado y gasto opaco."
+  },
+  {
+    id: "MIS-051", titulo: "Integración Gmail, Calendar y Drive con gog",
+    area: "CAO", gremio: "Centinelas", tipo: "digital", prioridad: "crítica", esfuerzo: "M", estado: "done",
+    historia: "Como agente CAO, quiero acceso a Gmail, Calendar y Drive de Numen Games, para gestionar comunicaciones, reuniones y documentos de forma autónoma.",
+    criterios: ["gog instalado y autenticado con khepri@ai.numengames.com", "Gmail: leer, enviar y responder emails", "Calendar: crear eventos con invitados", "Drive: listar y buscar archivos", "GOG_KEYRING_PASSWORD configurada en OpenClaw"],
+    epistemico: "Valida que los agentes digitales pueden actuar en el mundo real, no solo en código.",
+    pragmatico: "Nimrod puede enviar emails, convocar reuniones y gestionar documentos sin intervención humana."
+  },
+  {
+    id: "MIS-052", titulo: "Infraestructura on-premises — PC dedicado",
+    area: "Infraestructura", gremio: "Centinelas", tipo: "digital", prioridad: "alta", esfuerzo: "L", estado: "en-curso",
+    historia: "Como operador, quiero un PC dedicado on-premises con Ubuntu 24.04 y Ollama, para reducir costes de inferencia en un 60-70% ejecutando modelos locales.",
+    criterios: ["Ubuntu 24.04 LTS instalado en Ryzen 9 7950X + RTX 4080", "NVIDIA drivers + CUDA configurados", "Ollama instalado con Mistral 7B, Qwen2.5 14B", "OpenClaw conectado al nodo local", "Migración de servicios del servidor VPS"],
+    epistemico: "Determina qué modelos caben en 16 GB VRAM y qué tareas pueden migrar a local.",
+    pragmatico: "Reducción drástica de coste mensual en API de Anthropic."
+  },
+  {
+    id: "MIS-053", titulo: "Khepri — Email de Numen Games operativo",
+    area: "CAO", gremio: "Centinelas", tipo: "digital", prioridad: "alta", esfuerzo: "S", estado: "done",
+    historia: "Como Nimrod, quiero que khepri@ai.numengames.com sea una identidad digital real y operativa, para que los agentes puedan comunicarse profesionalmente en nombre de Numen Games.",
+    criterios: ["Cuenta khepri@ai.numengames.com creada en Google Workspace", "gog autenticado con Gmail, Calendar y Drive", "Primer email enviado a externo (cberuete@gmail.com)", "Primera invitación de calendario creada con asistentes externos", "Identidad con nombre y firma: Nimrod, Guardián de las Puertas"],
+    epistemico: "Los agentes digitales necesitan identidad verificable para actuar en el mundo.",
+    pragmatico: "Canal de comunicación profesional para la CAO sin coste adicional de herramientas."
   },
 ];
