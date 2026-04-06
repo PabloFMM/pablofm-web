@@ -11,6 +11,14 @@ export function getStaticPaths() {
 
 const { mision } = Astro.props;
 
+const estadoConfig: Record<string, { icon: string; label: string; class: string }> = {
+  "backlog": { icon: "📋", label: "Backlog", class: "text-dim" },
+  "en-curso": { icon: "⚡", label: "En curso", class: "text-accent" },
+  "revision": { icon: "👁️", label: "En revisión", class: "text-yellow" },
+  "done": { icon: "✅", label: "Completada", class: "text-green" },
+};
+const estadoActual = estadoConfig[mision.estado] ?? { icon: "📋", label: mision.estado, class: "text-dim" };
+
 const prioridadColor: Record<string, string> = {
   "crítica": "bg-red/10 text-red border-red/20",
   "alta": "bg-accent/10 text-accent border-accent/20",
@@ -65,7 +73,7 @@ const tipoLabel: Record<string, string> = {
         <div class="flex flex-wrap gap-4 font-mono text-[0.7rem] text-dim">
           <span>Área <span class="text-muted-foreground">{mision.area}</span></span>
           <span>Gremio <span class="text-muted-foreground">{mision.gremio}</span></span>
-          <span>Estado <span class="text-accent">📋 Backlog</span></span>
+          <span>Estado <span class:list={[estadoActual.class]}>{estadoActual.icon} {estadoActual.label}</span></span>
         </div>
       </div>
 
@@ -81,7 +89,9 @@ const tipoLabel: Record<string, string> = {
         <ul class="space-y-3">
           {mision.criterios.map((c) => (
             <li class="flex items-start gap-3">
-              <span class="mt-0.5 h-4 w-4 rounded border border-border flex-shrink-0"></span>
+              <span class="mt-0.5 h-4 w-4 flex-shrink-0 flex items-center justify-center">
+                {mision.estado === "done" ? "✅" : <span class="h-4 w-4 rounded border border-border block"></span>}
+              </span>
               <span class="text-sm text-muted-foreground leading-relaxed">{c}</span>
             </li>
           ))}
@@ -99,6 +109,48 @@ const tipoLabel: Record<string, string> = {
           <p class="text-sm text-muted-foreground leading-relaxed">{mision.pragmatico}</p>
         </div>
       </div>
+
+      <!-- Ejecución Real -->
+      {mision.ejecucion && (
+        <div class="rounded-xl border border-green/20 bg-green/5 p-6 mb-8">
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-green mb-4">🏗️ Ejecución Real</p>
+          <p class="font-mono text-[0.55rem] text-dim mb-4 italic">"Los planos ideales muestran la intención. Los planos reales muestran el conocimiento."</p>
+          <div class="space-y-3">
+            {mision.ejecucion.tecnologiaUsada && (
+              <div>
+                <p class="font-mono text-[0.6rem] text-green uppercase tracking-wider mb-1">Tecnología ejecutada</p>
+                <p class="text-sm text-muted-foreground">{mision.ejecucion.tecnologiaUsada}</p>
+              </div>
+            )}
+            {mision.ejecucion.porQueDivergió && (
+              <div>
+                <p class="font-mono text-[0.6rem] text-green uppercase tracking-wider mb-1">Por qué divergió</p>
+                <p class="text-sm text-muted-foreground">{mision.ejecucion.porQueDivergió}</p>
+              </div>
+            )}
+            {mision.ejecucion.aprendizajeClave && (
+              <div>
+                <p class="font-mono text-[0.6rem] text-green uppercase tracking-wider mb-1">Aprendizaje clave</p>
+                <p class="text-sm text-muted-foreground font-medium">{mision.ejecucion.aprendizajeClave}</p>
+              </div>
+            )}
+            <div class="flex gap-6 pt-2 border-t border-green/10">
+              {mision.ejecucion.fechaCierre && (
+                <div>
+                  <p class="font-mono text-[0.55rem] text-dim">Cerrada</p>
+                  <p class="font-mono text-[0.65rem] text-green">{mision.ejecucion.fechaCierre}</p>
+                </div>
+              )}
+              {mision.ejecucion.agenteEjecutor && (
+                <div>
+                  <p class="font-mono text-[0.55rem] text-dim">Agente</p>
+                  <p class="font-mono text-[0.65rem] text-green">{mision.ejecucion.agenteEjecutor}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <!-- Nav entre misiones -->
       <div class="flex justify-between border-t border-border pt-6">
