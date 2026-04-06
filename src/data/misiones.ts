@@ -14,6 +14,13 @@ export interface Mision {
   criterios: string[];
   epistemico: string;
   pragmatico: string;
+  ejecucion?: {
+    tecnologiaUsada?: string;
+    porQueDivergió?: string;
+    aprendizajeClave?: string;
+    fechaCierre?: string;
+    agenteEjecutor?: string;
+  };
 }
 
 export const misiones: Mision[] = [
@@ -63,7 +70,14 @@ export const misiones: Mision[] = [
     historia: "Como operador, quiero todos los servicios accesibles via HTTPS con subdominios propios, para que nada sea accesible por IP:puerto.",
     criterios: ["Nginx instalado como reverse proxy", "SSL via Let's Encrypt para analytics.pablofm.com y cal.pablofm.com", "Puertos 3001/3002 cerrados externamente", "Renovación SSL automática"],
     epistemico: "Revela la madurez real de la infraestructura actual.",
-    pragmatico: "Infraestructura profesional. Los links son compartibles."
+    pragmatico: "Infraestructura profesional. Los links son compartibles.",
+    ejecucion: {
+      tecnologiaUsada: "Caddy (reverse proxy moderno con SSL automático)",
+      porQueDivergió: "Caddy gestiona Let's Encrypt automáticamente sin Certbot. Nginx requería configuración manual adicional.",
+      aprendizajeClave: "Para stacks sin requisitos especiales de Nginx, Caddy elimina fricción operativa y es superior para mantenimiento mínimo.",
+      fechaCierre: "2026-04-05",
+      agenteEjecutor: "Nimrod (Centinela-01)"
+    }
   },
   {
     id: "MIS-017", titulo: "Pipeline de Prospección B2B (50 leads)",
@@ -143,7 +157,14 @@ export const misiones: Mision[] = [
     historia: "Como agente CAO, quiero acceso a Gmail, Calendar y Drive de Numen Games, para gestionar comunicaciones, reuniones y documentos de forma autónoma.",
     criterios: ["gog instalado y autenticado con khepri@ai.numengames.com", "Gmail: leer, enviar y responder emails", "Calendar: crear eventos con invitados", "Drive: listar y buscar archivos", "GOG_KEYRING_PASSWORD configurada en OpenClaw"],
     epistemico: "Valida que los agentes digitales pueden actuar en el mundo real, no solo en código.",
-    pragmatico: "Nimrod puede enviar emails, convocar reuniones y gestionar documentos sin intervención humana."
+    pragmatico: "Nimrod puede enviar emails, convocar reuniones y gestionar documentos sin intervención humana.",
+    ejecucion: {
+      tecnologiaUsada: "gog (gogcli v0.12.0) — Gmail, Calendar y Drive API vía OAuth2",
+      porQueDivergió: "La variable GOG_KEYRING_PASSWORD no se heredaba al entorno exec. Se resolvió añadiendo la variable a nivel raíz del config de OpenClaw.",
+      aprendizajeClave: "Las variables de entorno del gateway no se propagan automáticamente a subshells exec. Deben declararse explícitamente en config.",
+      fechaCierre: "2026-04-05",
+      agenteEjecutor: "Nimrod (Centinela-01)"
+    }
   },
   {
     id: "MIS-052", titulo: "Infraestructura on-premises — PC dedicado",
@@ -159,6 +180,13 @@ export const misiones: Mision[] = [
     historia: "Como Nimrod, quiero que khepri@ai.numengames.com sea una identidad digital real y operativa, para que los agentes puedan comunicarse profesionalmente en nombre de Numen Games.",
     criterios: ["Cuenta khepri@ai.numengames.com creada en Google Workspace", "gog autenticado con Gmail, Calendar y Drive", "Primer email enviado a externo (cberuete@gmail.com)", "Primera invitación de calendario creada con asistentes externos", "Identidad con nombre y firma: Nimrod, Guardián de las Puertas"],
     epistemico: "Los agentes digitales necesitan identidad verificable para actuar en el mundo.",
-    pragmatico: "Canal de comunicación profesional para la CAO sin coste adicional de herramientas."
+    pragmatico: "Canal de comunicación profesional para la CAO sin coste adicional de herramientas.",
+    ejecucion: {
+      tecnologiaUsada: "Google Workspace — khepri@ai.numengames.com + gog CLI",
+      porQueDivergió: "Proceso de auth requirió SSH con port forwarding al servidor ya que el browser flow no funciona en servidor headless.",
+      aprendizajeClave: "Los agentes digitales necesitan identidad verificable (email, calendario) para actuar profesionalmente. El setup inicial requiere presencia humana (browser flow), pero luego opera autónomamente.",
+      fechaCierre: "2026-04-05",
+      agenteEjecutor: "Nimrod (Centinela-01)"
+    }
   },
 ];
