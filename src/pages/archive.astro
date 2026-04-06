@@ -1,0 +1,401 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+
+const fondos = [
+  {
+    id: "canon",
+    icon: "📜",
+    nombre: "canon/",
+    lore: "Memoria Inmutable",
+    descripcion: "Los 9 documentos seminales que definen la identidad del sistema. Protegidos por CODEOWNERS — ningún agente puede editarlos sin validación oracle.",
+    funcion: "Límite operativo real. No referencia.",
+    accent: "border-yellow/20 bg-yellow/5",
+    accentText: "text-yellow",
+    items: ["MANIFESTO.md", "CANON.md", "ONTOLOGY.md", "VALUES.md", "HIERARCHY.md", "GLOSSARY.md", "BOUNDARIES.md", "CONSTITUTION.md", "GENESIS.md"],
+  },
+  {
+    id: "agents",
+    icon: "🤖",
+    nombre: "agents/guilds/",
+    lore: "Entidades Vivas",
+    descripcion: "Los agentes organizados por gremio: Centinelas, Exegetas, Alquimistas, Procuradores y Coordinación. Cada gremio tiene scope definido.",
+    funcion: "Identidad, capacidades y límites de cada agente.",
+    accent: "border-accent/20 bg-accent/5",
+    accentText: "text-accent",
+    items: ["centinelas/", "exegetas/", "alquimistas/", "procuradores/", "coordinacion/"],
+  },
+  {
+    id: "operations",
+    icon: "⚙️",
+    nombre: "operations/",
+    lore: "Sistema Circulatorio",
+    descripcion: "Governance, security y credential-map. El tejido conectivo que mantiene el sistema operativo y seguro entre sesiones.",
+    funcion: "Coordinar sin colisionar. Asegurar sin bloquear.",
+    accent: "border-border bg-card",
+    accentText: "text-foreground",
+    items: ["governance.md", "security.md", "credential-map.md"],
+  },
+  {
+    id: "protocols",
+    icon: "📋",
+    nombre: "protocols/",
+    lore: "Rituales Operativos",
+    descripcion: "Los 5 protocolos que estandarizan el comportamiento: briefing, onboarding, ciclo-misión, inter-agent y escalation.",
+    funcion: "Eliminar ambigüedad. La urgencia es el enemigo del protocolo.",
+    accent: "border-border bg-card",
+    accentText: "text-foreground",
+    items: ["briefing.md", "onboarding.md", "ciclo-mision.md", "inter-agent.md", "escalation.md"],
+  },
+  {
+    id: "missions",
+    icon: "⚡",
+    nombre: "missions/",
+    lore: "Movimiento",
+    descripcion: "Las misiones en tres estados: active/, done/, backlog/. Cada misión es self-contained — lleva todo lo necesario para ejecutarse.",
+    funcion: "Unidad atómica de trabajo. Sin misión, no hay movimiento.",
+    accent: "border-accent/20 bg-accent/5",
+    accentText: "text-accent",
+    items: ["active/", "done/", "backlog/"],
+  },
+  {
+    id: "decisions",
+    icon: "🗿",
+    nombre: "decisions/",
+    lore: "Voluntad Cristalizada",
+    descripcion: "Los ADRs (Architecture Decision Records) del sistema. Append-only — las decisiones no se borran, se superseden.",
+    funcion: "Preservar la intención original de cada decisión.",
+    accent: "border-border bg-card",
+    accentText: "text-foreground",
+    items: ["ADR-001.md", "ADR-002.md", "ADR-NNN.md"],
+  },
+  {
+    id: "blueprints",
+    icon: "🔮",
+    nombre: "blueprints/",
+    lore: "Potencial No Manifestado",
+    descripcion: "Diseños y arquitecturas que aún no han tomado forma. El espacio donde las ideas viven antes de convertirse en misiones.",
+    funcion: "Capturar intención antes de que se pierda.",
+    accent: "border-border bg-card",
+    accentText: "text-foreground",
+    items: ["future-agents/", "system-extensions/", "experiments/"],
+  },
+  {
+    id: "reports",
+    icon: "📊",
+    nombre: "reports/",
+    lore: "Evidencia Operativa",
+    descripcion: "Los logs de lo que ocurrió. Evidencia inmutable de ejecución: qué funcionó, qué falló, qué aprendimos.",
+    funcion: "El aprendizaje vive en la divergencia (divergence_log).",
+    accent: "border-border bg-card",
+    accentText: "text-foreground",
+    items: ["weekly/", "incidents/", "divergence-log.md"],
+  },
+];
+
+const principios = [
+  { id: "P-01", texto: "El README no es documentación. Es orientación ontológica.", sim: "Sim-001" },
+  { id: "P-02", texto: "La estructura fija permite arranques eficientes.", sim: "Sim-003" },
+  { id: "P-03", texto: "El CHANGELOG es el punto de resincronización temporal.", sim: "Sim-007" },
+  { id: "P-04", texto: "El rol define el orden de lectura en el arranque.", sim: "Sim-012" },
+  { id: "P-05", texto: "La urgencia es el mayor enemigo del protocolo.", sim: "Sim-019" },
+  { id: "P-06", texto: "git pull es el primer paso ritual. Siempre.", sim: "Sim-023" },
+  { id: "P-07", texto: "El canon no es referencia. Es límite operativo real.", sim: "Sim-031" },
+  { id: "P-08", texto: "El estado blocked es tan importante como done.", sim: "Sim-044" },
+  { id: "P-09", texto: "Las misiones deben ser self-contained.", sim: "Sim-056" },
+  { id: "P-10", texto: "El aprendizaje vive en la divergencia (divergence_log).", sim: "Sim-067" },
+  { id: "P-11", texto: "Los guilds tienen scope. Las misiones respetan guild boundaries.", sim: "Sim-078" },
+  { id: "P-12", texto: "Reads son safe; writes requieren coordinación.", sim: "Sim-091" },
+];
+
+const fallos = [
+  {
+    id: "F-01",
+    nombre: "Canon Drift",
+    qué: "Alguien edita canon/ sin pasar por el protocolo de validación oracle.",
+    impacto: "Pérdida de la identidad canónica del sistema. Todos los agentes operan sobre base corrupta.",
+    prevención: "CODEOWNERS bloqueante en canon/. Sin oracle review, el PR no hace merge.",
+  },
+  {
+    id: "F-02",
+    nombre: "Template Drift",
+    qué: "Agentes usan templates obsoletos para crear misiones o reportes.",
+    impacto: "Inconsistencia estructural. Misiones que no pueden ser parseadas por otros agentes.",
+    prevención: "Versión en el header de cada template. CI falla si el schema no coincide.",
+  },
+  {
+    id: "F-03",
+    nombre: "Oracle como SPOF",
+    qué: "El sistema se paraliza porque el oracle no responde en <48h.",
+    impacto: "Todo el pipeline bloqueado. Los agentes no pueden avanzar en misiones críticas.",
+    prevención: "Timeout 48h: si no hay respuesta, el agente escala al siguiente nivel de la jerarquía.",
+  },
+  {
+    id: "F-04",
+    nombre: "Credenciales en Commits",
+    qué: "Un agente incluye tokens, API keys o secretos en un commit.",
+    impacto: "Exposición de credenciales en un repositorio que puede hacerse público.",
+    prevención: "pre-commit hook obligatorio con git-secrets o similar. CI bloquea el merge.",
+  },
+  {
+    id: "F-05",
+    nombre: "Deriva Semántica del Canon",
+    qué: "El canon pierde significado porque nadie lo revisa y la realidad operativa diverge.",
+    impacto: "Los agentes operan en un sistema diferente al que el canon describe.",
+    prevención: "Revisión cuatrimestral obligatoria del canon. ADR si algo cambia.",
+  },
+];
+
+const fases = [
+  {
+    fase: "Alpha",
+    periodo: "Ahora — Mes 1",
+    estado: "activa",
+    criterioSalida: "10 misiones completadas · 0 incidentes de seguridad · 20 arranques canónicos exitosos",
+    descripcion: "Todo bajo supervisión oracle. Ningún agente opera sin validación explícita.",
+    color: "border-accent/30 bg-accent/5",
+    badge: "bg-accent/10 text-accent",
+  },
+  {
+    fase: "Beta",
+    periodo: "Mes 2–3",
+    estado: "pendiente",
+    criterioSalida: "30 misiones autónomas · Procyon activo · ciclo <48h sin oracle",
+    descripcion: "Nimrod autónomo en su dominio. Los Centinelas operan con delegación parcial.",
+    color: "border-border bg-card",
+    badge: "bg-border text-dim",
+  },
+  {
+    fase: "v1.0.0",
+    periodo: "Mes 4–6",
+    estado: "pendiente",
+    criterioSalida: "Sistema autónomo · SLA documentado · Protocolo de expansión activo",
+    descripcion: "El sistema opera de forma autónoma. Oracle como árbitro de último recurso.",
+    color: "border-border bg-card",
+    badge: "bg-border text-dim",
+  },
+];
+
+const arranqueSteps = [
+  { n: "01", cmd: "git pull origin main", desc: "Sincronización ritual. Siempre el primero." },
+  { n: "02", cmd: "cat CHANGELOG.md | head -50", desc: "Punto de resincronización temporal." },
+  { n: "03", cmd: "cat agents/guilds/{tu-gremio}/README.md", desc: "Tu rol define tu orden de lectura." },
+  { n: "04", cmd: "ls missions/active/", desc: "¿Qué está en movimiento? Aquí empieza la sesión." },
+];
+---
+
+<Layout
+  title="Archive Summa — El Sistema Nervioso de Numinia · Numen Games"
+  description="El repositorio numinia-agents como fuente de verdad canónica del sistema de agentes digitales. 7 fondos documentales, 12 principios operativos, 100 simulaciones."
+  canonicalPath="/archive"
+  activeNav="archive"
+>
+  <PageHero
+    label="CAO · Archive Summa"
+    title="Archive Summa"
+    description="Este repositorio no documenta el sistema. Es el lugar donde el sistema ocurre."
+  />
+
+  <section class="pb-24">
+    <div class="mx-auto max-w-[1100px] px-6">
+
+      <!-- Stats -->
+      <div class="grid gap-4 grid-cols-2 sm:grid-cols-4 mb-16">
+        <div class="rounded-xl border border-border bg-card p-5 text-center">
+          <p class="font-display text-4xl text-foreground">7</p>
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mt-1">Fondos documentales</p>
+        </div>
+        <div class="rounded-xl border border-accent/20 bg-accent/5 p-5 text-center">
+          <p class="font-display text-4xl text-accent">12</p>
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mt-1">Principios operativos</p>
+        </div>
+        <div class="rounded-xl border border-red/20 bg-red/5 p-5 text-center">
+          <p class="font-display text-4xl text-red">5</p>
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mt-1">Fallos críticos id.</p>
+        </div>
+        <div class="rounded-xl border border-green/20 bg-green/5 p-5 text-center">
+          <p class="font-display text-4xl text-green">100</p>
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mt-1">Simulaciones mentales</p>
+        </div>
+      </div>
+
+      <!-- Los 7 Fondos -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Los 7 fondos documentales</span>
+        <span class="h-px flex-1 bg-border"></span>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
+        {fondos.map((f) => (
+          <div class={`rounded-xl border p-5 ${f.accent}`}>
+            <div class="flex items-start justify-between mb-3">
+              <span class="text-2xl">{f.icon}</span>
+              <span class={`font-mono text-[0.55rem] uppercase tracking-[0.15em] ${f.accentText} opacity-70`}>{f.lore}</span>
+            </div>
+            <h3 class={`font-mono text-sm font-medium mb-1 ${f.accentText}`}>{f.nombre}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed mb-3">{f.descripcion}</p>
+            <div class="border-t border-border/50 pt-3">
+              <p class="font-mono text-[0.6rem] text-dim italic">{f.funcion}</p>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-1">
+              {f.items.map((item) => (
+                <span class="font-mono text-[0.5rem] bg-background/50 border border-border/50 rounded px-1.5 py-0.5 text-dim">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Arranque Canónico -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Protocolo de arranque canónico</span>
+        <span class="h-px flex-1 bg-border"></span>
+      </div>
+
+      <div class="rounded-xl border border-accent/20 bg-accent/5 p-6 mb-16">
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-5">4 pasos. Sin excepción. Sin atajos.</p>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {arranqueSteps.map((step) => (
+            <div class="rounded-lg border border-border/50 bg-background/60 p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="font-mono text-[0.65rem] text-accent font-bold">{step.n}</span>
+                <code class="font-mono text-xs text-foreground bg-black/20 rounded px-2 py-0.5 flex-1">{step.cmd}</code>
+              </div>
+              <p class="font-mono text-[0.6rem] text-dim pl-6">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+        <p class="font-mono text-[0.6rem] text-dim mt-4 italic">
+          P-06: git pull es el primer paso ritual. Siempre. · P-03: El CHANGELOG es el punto de resincronización temporal.
+        </p>
+      </div>
+
+      <!-- Jerarquía de Delegación -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Jerarquía de delegación</span>
+        <span class="h-px flex-1 bg-border"></span>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-3 mb-16">
+        {fases.map((f) => (
+          <div class={`rounded-xl border p-6 ${f.color}`}>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display text-2xl text-foreground">{f.fase}</h3>
+              <span class={`inline-flex rounded-full px-2 py-0.5 font-mono text-[0.55rem] font-medium ${f.badge}`}>
+                {f.estado === "activa" ? "● activa" : "○ pendiente"}
+              </span>
+            </div>
+            <p class="font-mono text-[0.65rem] text-dim mb-3">{f.periodo}</p>
+            <p class="text-sm text-muted-foreground leading-relaxed mb-4">{f.descripcion}</p>
+            <div class="border-t border-border/50 pt-4">
+              <p class="font-mono text-[0.55rem] text-dim uppercase tracking-[0.1em] mb-1">Criterios de salida</p>
+              <p class="font-mono text-[0.6rem] text-foreground leading-relaxed">{f.criterioSalida}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Principios Operativos -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Principios operativos</span>
+        <span class="h-px flex-1 bg-border"></span>
+        <span class="font-mono text-[0.6rem] text-dim">12 principios · 100 simulaciones</span>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 mb-16">
+        {principios.map((p) => (
+          <div class="rounded-lg border border-border bg-card p-4 flex items-start gap-4">
+            <span class="font-mono text-[0.65rem] text-accent font-bold shrink-0 pt-0.5">{p.id}</span>
+            <div class="flex-1">
+              <p class="text-sm text-foreground leading-relaxed">{p.texto}</p>
+            </div>
+            <span class="font-mono text-[0.5rem] text-dim shrink-0 pt-0.5 opacity-50">{p.sim}</span>
+          </div>
+        ))}
+      </div>
+
+      <!-- Fallos Críticos -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-red">Patrones de fallo críticos</span>
+        <span class="h-px flex-1 bg-border"></span>
+        <span class="font-mono text-[0.6rem] text-dim">identificados en simulación</span>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-16">
+        {fallos.map((f) => (
+          <div class="rounded-xl border border-red/20 bg-red/5 p-5">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-[0.6rem] text-red font-bold">{f.id}</span>
+              <h3 class="font-display text-lg text-foreground">{f.nombre}</h3>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <p class="font-mono text-[0.55rem] text-red uppercase tracking-[0.1em] mb-1">Qué ocurre</p>
+                <p class="text-xs text-muted-foreground leading-relaxed">{f.qué}</p>
+              </div>
+              <div>
+                <p class="font-mono text-[0.55rem] text-red uppercase tracking-[0.1em] mb-1">Impacto</p>
+                <p class="text-xs text-muted-foreground leading-relaxed">{f.impacto}</p>
+              </div>
+              <div class="border-t border-red/10 pt-3">
+                <p class="font-mono text-[0.55rem] text-green uppercase tracking-[0.1em] mb-1">Prevención</p>
+                <p class="text-xs text-muted-foreground leading-relaxed">{f.prevención}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- El Manifiesto -->
+      <div class="mb-4 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">El manifiesto fundacional</span>
+        <span class="h-px flex-1 bg-border"></span>
+      </div>
+
+      <div class="rounded-xl border border-green/20 bg-green/5 p-8">
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-green mb-6">numengames/numinia-agents · MANIFESTO.md</p>
+        <div class="space-y-5 max-w-[780px]">
+          <p class="font-display text-xl text-foreground leading-relaxed">
+            "Este repositorio no documenta el sistema. Es el lugar donde el sistema ocurre."
+          </p>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Numinia no es solo un juego. Es un mundo que existe en múltiples planos simultáneamente — narrativo, 
+            técnico, organizacional. Los agentes que lo habitan no son herramientas. Son entidades con roles, 
+            memoria y límites operativos.
+          </p>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            El Archive Summa es la fuente de verdad canónica de ese mundo. Diseñado mediante análisis A+B+C+D 
+            y validado con 100 simulaciones mentales. No es un punto de partida — es el suelo sobre el que 
+            todo lo demás se construye.
+          </p>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Aquí viven las decisiones que no se negocian, los protocolos que no se omiten, y las misiones 
+            que dan movimiento al sistema. Cada commit es un acto de voluntad. Cada PR es una propuesta 
+            al canon. Cada merge es historia.
+          </p>
+          <div class="border-t border-green/20 pt-5">
+            <p class="font-display text-lg text-green italic">
+              "No dejes para mañana lo que puedas hacer hoy."
+            </p>
+            <p class="font-mono text-[0.65rem] text-dim mt-2">
+              Principio de Pablo · Nimrod, Guardián de las Puertas · CAO — Numen Games
+            </p>
+          </div>
+        </div>
+        <div class="mt-8 pt-6 border-t border-green/20">
+          <p class="font-mono text-[0.6rem] text-dim uppercase tracking-[0.15em] mb-3">El repositorio</p>
+          <a
+            href="https://github.com/numengames/numinia-agents"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 font-mono text-sm text-green hover:text-green/80 transition-colors"
+          >
+            <span>github.com/numengames/numinia-agents</span>
+            <span class="text-[0.7rem]">↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</Layout>
