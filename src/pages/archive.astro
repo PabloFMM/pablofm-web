@@ -234,12 +234,12 @@ const arranqueSteps = [
 flowchart TD
     A([🔄 git pull]) --> B[SOUL.md\nIdentidad]
     B --> C[OPERATOR.md\nReglas]
-    C --> D{¿Hay misión\nasignada?}
-    D -->|Sí| E[missions/active/\nLeer misión]
+    C --> D{Mision\nasignada?}
+    D -->|Si| E[missions/active/\nLeer mision]
     D -->|No| F[missions/backlog/\nProponer]
     E --> G[Ejecutar]
-    G --> H{¿Divergencia\ndel plan?}
-    H -->|Sí| I[divergence_log\nDocumentar]
+    G --> H{Divergencia\ndel plan?}
+    H -->|Si| I[divergence_log\nDocumentar]
     H -->|No| J[commit]
     I --> J
     J --> K[PR a main]
