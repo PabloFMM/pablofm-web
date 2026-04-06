@@ -26,6 +26,7 @@ export const navItems: NavItem[] = [
       { label: "Gaps", href: "/gaps", id: "gaps" },
       { label: "Soluciones", href: "/soluciones", id: "soluciones" },
       { label: "Simulaciones", href: "/simulaciones", id: "simulaciones" },
+      { label: "Ventas", href: "/ventas", id: "ventas" },
     ],
   },
 ];
