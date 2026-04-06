@@ -5,6 +5,7 @@ export const navItems = [
   { label: "OpenClawTest", href: "/openclaw-test", id: "openclaw-test" },
   { label: "CAO", href: "/cao", id: "cao" },
   { label: "Misiones", href: "/misiones", id: "misiones" },
+  { label: "Archive", href: "/archive", id: "archive" },
   { label: "Reportes", href: "/reportes", id: "reportes" },
   { label: "Planos", href: "/planos", id: "planos" },
   { label: "Decisiones", href: "/decisiones", id: "decisiones" },
