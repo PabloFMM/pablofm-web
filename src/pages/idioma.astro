@@ -172,31 +172,36 @@ const colNames = ["Business 1", "Functional 3", "Mixed 5", "Narrative 7", "Numin
         </div>
 
         <!-- Gamification dial -->
-        <div class="rounded-2xl border border-border bg-card p-7">
+        <div class="rounded-2xl border border-[#fbbf24]/25 bg-[#fbbf24]/5 p-7">
           <div class="flex items-center gap-3 mb-4">
             <span class="text-2xl">🎮</span>
             <div>
               <h2 class="font-display text-xl text-foreground">Gamification Dial</h2>
-              <p class="font-mono text-[0.6rem] text-dim">1 → 10 · <span class="text-yellow">In design</span></p>
+              <p class="font-mono text-[0.6rem] text-dim">1 → 10 · 5 real thresholds</p>
             </div>
           </div>
           <p class="text-sm text-muted-foreground leading-relaxed mb-5">
-            Controls game mechanics, progression, and reward systems. Independent from the narrative. A 1/10 narrative org can still have full gamification.
+            Gamification has qualitative jumps, not a smooth curve. Five named thresholds. Independent from the narrative dial.
           </p>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-mono text-[0.6rem] text-dim">1 — No mechanics</span>
-              <span class="font-mono text-[0.6rem] text-dim">Just the OS</span>
-            </div>
-            <div class="h-2 rounded-full bg-gradient-to-r from-border to-border relative overflow-hidden">
-              <div class="absolute inset-0 bg-gradient-to-r from-[#fbbf24]/30 to-[#fbbf24]/60 animate-pulse"></div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="font-mono text-[0.6rem] text-yellow">10 — Full RPG</span>
-              <span class="font-mono text-[0.6rem] text-yellow">Ranks, Prism Cells, Seals</span>
-            </div>
+          <div class="space-y-2 mb-4">
+            {[
+              { n: "1", name: "None", desc: "Just the OS", color: "#6b7280" },
+              { n: "3", name: "Visibility", desc: "Dashboards, streaks, progress %", color: "#86efac" },
+              { n: "5", name: "Achievement", desc: "Badges, milestones, celebration", color: "#fbbf24" },
+              { n: "7", name: "Progression", desc: "Ranks, reputation, history", color: "#f97316" },
+              { n: "10", name: "Full Economy", desc: "Tokens, Prism Cells, real weight", color: "#2dd4bf" },
+            ].map((t) => (
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-[0.6rem] w-4 text-right flex-shrink-0" style={`color: ${t.color}`}>{t.n}</span>
+                <div class="h-1.5 flex-1 rounded-full" style={`background: ${t.color}30`}>
+                  <div class="h-full rounded-full" style={`width: ${(parseInt(t.n)/10)*100}%; background: ${t.color}80`}></div>
+                </div>
+                <span class="font-mono text-[0.6rem] w-24 flex-shrink-0" style={`color: ${t.color}`}>{t.name}</span>
+                <span class="font-mono text-[0.55rem] text-dim hidden sm:block">{t.desc}</span>
+              </div>
+            ))}
           </div>
-          <p class="font-mono text-[0.55rem] text-dim mt-4 italic">Gamification system design in progress — MIS-055</p>
+          <p class="font-mono text-[0.55rem] text-dim italic">Intermediate levels (2,4,6,8,9) are blends — no name, full config</p>
         </div>
       </div>
 
