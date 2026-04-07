@@ -1,187 +1,286 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import PageHero from "@/components/PageHero.astro";
-import SectionHeader from "@/components/SectionHeader.astro";
-import HighlightBox from "@/components/HighlightBox.astro";
-import Tag from "@/components/Tag.astro";
+
+const features = [
+  {
+    id: "missions",
+    name: "Mission System",
+    status: "active",
+    default: "on",
+    description: "Each unit of work is a structured document with a unique ID, acceptance criteria, epistemic value, and pragmatic value. Missions are versioned in git.",
+    why: "Transforms tasks into documented knowledge. Closing a mission leaves a trace — what was done, why it diverged from the plan, and what was learned.",
+    compare: "Linear and Jira track completion. The Mission System tracks knowledge.",
+    fields: ["id", "title", "type (biological/digital/hybrid)", "priority", "effort", "status", "story", "acceptance criteria", "epistemic value", "pragmatic value", "execution reality"],
+  },
+  {
+    id: "blueprints",
+    name: "Blueprints (System Maps)",
+    status: "active",
+    default: "on",
+    description: "Living architecture documents that show the current state, target state, gap delta, and open questions for each subsystem.",
+    why: "Most organizations have architectural decisions in people's heads. Blueprints externalize that knowledge into auditable, updatable files.",
+    compare: "Architecture Decision Records (ADRs) capture one decision. Blueprints show the whole system at a glance.",
+    fields: ["id", "area", "status semaphore (green/yellow/red)", "current state", "target state", "related decisions", "gap → mission delta table", "open questions", "dependencies"],
+  },
+  {
+    id: "decisions",
+    name: "Decision Registry",
+    status: "active",
+    default: "on",
+    description: "Append-only log of architectural and strategic decisions. Each record captures context, the decision made, alternatives rejected, and pros/cons.",
+    why: "Decisions made without documentation get remade. The registry prevents wheel reinvention and makes the cost of changing direction explicit.",
+    compare: "Notion docs get edited and lose history. The Decision Registry is immutable — superseded by new decisions, never deleted.",
+    fields: ["id", "title", "date", "status (active/provisional/superseded)", "context", "decision", "why", "rejected alternatives", "pros/cons"],
+  },
+  {
+    id: "agents",
+    name: "Digital Agents (CAO)",
+    status: "active",
+    default: "opt-in",
+    description: "AI agents with persistent identity files (SOUL.md, OPERATOR.md, MEMORY.md) that operate within the system. Each agent has a guild, a role, and operational laws.",
+    why: "Agents are not chatbots. They are long-running collaborators with memory, responsibilities, and verifiable identity. They read and write the same files humans do.",
+    compare: "ChatGPT and Copilot are stateless. NWOS agents maintain state across sessions via the git repository.",
+    fields: ["SOUL.md (identity)", "OPERATOR.md (laws)", "MEMORY.md (persistent context)", "guild assignment", "mission assignments", "operation logs"],
+  },
+  {
+    id: "reports",
+    name: "Operational Reports",
+    status: "active",
+    default: "on",
+    description: "Daily and weekly markdown reports committed to the repository. Reports are append-only — closed reports are never modified.",
+    why: "Reports create accountability without overhead. A 5-minute daily summary in git is auditable, searchable, and doesn't require a BI tool.",
+    compare: "Slack summaries disappear. Email reports aren't searchable. Git reports are permanent and diffable.",
+    fields: ["id", "date", "agent", "model", "completed work", "epistemic value", "pragmatic value", "pending items requiring human input"],
+  },
+  {
+    id: "protocols",
+    name: "Protocols",
+    status: "active",
+    default: "on",
+    description: "Operational procedures written as markdown files. Protocols define how recurring tasks are executed — from briefing an agent to onboarding a new member.",
+    why: "Recurring tasks without protocols become dependent on specific people. Protocols make processes portable.",
+    compare: "SOPs in Confluence rot and go unread. Markdown protocols are lightweight, versioned, and executable by agents.",
+    fields: ["id", "title", "trigger", "steps", "owner", "version"],
+  },
+];
+
+const layers = [
+  { level: "L0", name: "File Layer", desc: "All data is markdown files with YAML frontmatter. No proprietary formats.", icon: "📄" },
+  { level: "L1", name: "Version Layer", desc: "Git provides full history, branching, and collaboration via PRs.", icon: "🔀" },
+  { level: "L2", name: "Agent Layer", desc: "AI agents read and write files like any contributor.", icon: "🤖" },
+  { level: "L3", name: "Human Layer", desc: "Oracles (humans) approve decisions, set direction, and audit agent work.", icon: "🧬" },
+  { level: "L4", name: "Narrative Layer", desc: "Optional. Guilds, lore, and game mechanics that make the system engaging for humans.", icon: "🎭" },
+];
+
+const principles = [
+  {
+    name: "File over App",
+    desc: "Data lives in markdown files, not locked in a SaaS database. If the tool disappears, the knowledge survives.",
+  },
+  {
+    name: "Append-only history",
+    desc: "Decisions and reports are never edited retroactively. The record of what was thought and done at each moment is permanent.",
+  },
+  {
+    name: "Explicit over implicit",
+    desc: "Every architectural decision, every divergence from a plan, every open question is written down. Nothing lives only in someone's head.",
+  },
+  {
+    name: "Epistemic value as first-class citizen",
+    desc: "Every mission asks: what do we learn by doing this? Documentation that only records what was done is incomplete.",
+  },
+  {
+    name: "Human approval for external actions",
+    desc: "Agents execute internal work autonomously. Any action that leaves the system (email, publish, deploy) requires explicit human approval.",
+  },
+  {
+    name: "Layered architecture",
+    desc: "Each layer (files, version control, agents, humans, narrative) can fail without taking the others down. The system degrades gracefully.",
+  },
+];
 ---
 
 <Layout
-  title="Narrative Work OS — Pablo FM"
-  description="Un nuevo sistema operativo para organizaciones que ponen el significado en el centro del trabajo. No es gamificación. Es otra cosa."
+  title="Narrative Work OS — Numen Games"
+  description="A file-based operating system for organizations that need alignment, memory, and AI agent integration. No proprietary formats. No lock-in."
   canonicalPath="/nwos"
-  activeNav=""
+  activeNav="nwos"
 >
   <PageHero
-    label="Narrative Work OS"
-    title="El trabajo necesita un nuevo sistema operativo"
-    description="Las organizaciones modernas han optimizado la ejecución hasta el límite. Lo que no han resuelto es el significado. NWOS es el intento de hacerlo."
+    label="Numen Games · NWOS"
+    title="Narrative Work OS"
+    description="A structured, file-based operating system for organizations. Built on markdown, git, and AI agents. No proprietary formats. No lock-in."
   />
 
-  <!-- El problema -->
-  <section class="pb-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <div class="max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
-        <p>
-          El trabajo moderno tiene un problema de capa. Las organizaciones funcionan con sistemas operativos diseñados para la era industrial: jerarquías, KPIs, OKRs, Jira, Slack. Herramientas potentes, sí. Pero herramientas que tratan a las personas como recursos que ejecutan, no como agentes que <strong class="text-foreground">crean significado</strong>.
-        </p>
-        <p>
-          El resultado es conocido: burnout crónico, rotación silenciosa, culturas de empresa que nadie cree. Las personas se desconectan no porque el trabajo sea difícil, sino porque <strong class="text-foreground">no saben por qué importa</strong>.
-        </p>
-        <p>
-          La gamificación intentó resolverlo y falló. No porque la idea fuera mala, sino porque aplicó mecánicas de juego superficiales a sistemas que seguían siendo los mismos. Puntos encima de burocracia sigue siendo burocracia.
-        </p>
-      </div>
-    </div>
-  </section>
+  <section class="pb-20">
+    <div class="mx-auto max-w-[960px] px-6 space-y-20">
 
-  <!-- La tesis -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <HighlightBox>
-        <p class="text-sm leading-relaxed text-muted-foreground">
-          <strong class="text-accent">La tesis:</strong> El juego no es una metáfora del trabajo. Es su referente arquetípico. Cuando una organización adopta la estructura profunda del juego —roles, misiones, decisiones con peso, narrativa compartida— no está jugando a trabajar. Está trabajando de la única forma que activa el compromiso genuino.
-        </p>
-      </HighlightBox>
-    </div>
-  </section>
-
-  <!-- Qué es NWOS -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <SectionHeader
-        label="Qué es"
-        title="Un sistema operativo, no una app"
-      />
-      <div class="mt-8 max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
-        <p>
-          Un <strong class="text-foreground">Narrative Work OS</strong> es la capa de software, cultura y protocolo que une tres planos en una organización:
-        </p>
-      </div>
-      <div class="mt-8 grid gap-6 sm:grid-cols-3">
-        <div class="rounded-lg border border-border p-6 space-y-3">
-          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 1</div>
-          <h3 class="font-display text-lg text-foreground">Sistema Operativo</h3>
-          <p class="text-sm text-muted-foreground">La organización real: estructura, decisiones, incentivos, herramientas, agentes digitales. El plano donde se ejecuta el trabajo.</p>
+      <!-- What it is -->
+      <div>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">What it is</span>
+          <span class="h-px flex-1 bg-border"></span>
         </div>
-        <div class="rounded-lg border border-border p-6 space-y-3">
-          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 2</div>
-          <h3 class="font-display text-lg text-foreground">Modelo Funcional</h3>
-          <p class="text-sm text-muted-foreground">El sistema de roles, gremios, rangos y misiones. La gramática que convierte el trabajo en progresión con sentido.</p>
-        </div>
-        <div class="rounded-lg border border-border p-6 space-y-3">
-          <div class="text-xs font-semibold uppercase tracking-wider text-accent">Capa 3</div>
-          <h3 class="font-display text-lg text-foreground">Proyección Narrativa</h3>
-          <p class="text-sm text-muted-foreground">El mundo que la organización construye: nombre, lore, rituales, geografía cultural. La capa que convierte el modelo en identidad.</p>
+        <div class="grid gap-4 sm:grid-cols-3">
+          {[
+            { label: "For teams", desc: "10–200 people who need shared memory, decision traceability, and async coordination." },
+            { label: "Not a SaaS", desc: "A set of structured conventions and file formats. You own your data. It runs anywhere git runs." },
+            { label: "AI-native", desc: "Designed from the start for AI agents to read, write, and operate within the same files as humans." },
+          ].map((item) => (
+            <div class="rounded-xl border border-border bg-card p-5">
+              <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-2">{item.label}</p>
+              <p class="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
-      <div class="mt-8 max-w-[720px] text-sm text-muted-foreground">
-        La tríada está fundamentada en Peirce (objeto → ground → representamen) y Jung (arquetipo → mito → conscientización). No es decoración filosófica: es la razón por la que el sistema genera pertenencia duradera en lugar de engagement pasajero.
-      </div>
-    </div>
-  </section>
 
-  <!-- Principios -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <SectionHeader
-        label="Principios"
-        title="Lo que lo hace diferente"
-      />
-      <ul class="mt-8 space-y-4 max-w-[720px]">
-        {[
-          {
-            title: "El significado es infraestructura",
-            body: "No es un nice-to-have cultural. Las organizaciones sin significado tienen peor retención, menor creatividad y más fricción. El NWOS lo trata como componente técnico, no como iniciativa de RRHH.",
-          },
-          {
-            title: "Los roles son arquetipos, no títulos",
-            body: "Un gremio no es un departamento. Describe una forma de conocer y crear. Alquimistas, Exegetas, Procuradores, Centinelas — cada uno activa una capacidad diferente en la organización.",
-          },
-          {
-            title: "Las misiones reemplazan a las tareas",
-            body: "Una misión tiene contexto, criterio de éxito, agente responsable y aprendizaje documentado. Una tarea tiene un checkbox. La diferencia importa.",
-          },
-          {
-            title: "Las decisiones son piedras del camino",
-            body: "El historial de decisiones de una organización es su memoria colectiva. Un NWOS lo trata como activo, no como burocracia. Cada decisión explica qué se eligió, por qué, y qué se dejó ir.",
-          },
-          {
-            title: "Los agentes digitales son ciudadanos",
-            body: "En 2026, los LLMs no son herramientas. Son agentes con roles, misiones y memoria. El NWOS los integra en la misma estructura que los humanos — con las mismas reglas y la misma rendición de cuentas.",
-          },
-        ].map((item) => (
-          <li class="border-l-2 border-accent pl-5 space-y-1">
-            <div class="font-semibold text-foreground">{item.title}</div>
-            <div class="text-sm text-muted-foreground">{item.body}</div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- Por qué ahora -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <SectionHeader
-        label="Por qué ahora"
-        title="El momento lo exige"
-      />
-      <div class="mt-8 max-w-[720px] space-y-5 text-base leading-relaxed text-muted-foreground">
-        <p>
-          Tres fuerzas convergen en 2026 para hacer inevitable este modelo. Primero, el trabajo remoto rompió la cultura por fricción — la que se construía por estar en el mismo espacio. Segundo, los agentes de IA están ingresando en las organizaciones sin ningún marco que explique qué son o cómo encajan. Tercero, la generación que entra al mercado laboral <strong class="text-foreground">elige contexto sobre salario</strong> cuando puede permitírselo.
-        </p>
-        <p>
-          El Narrative Work OS no es una respuesta a una tendencia. Es una respuesta a una carencia estructural que siempre existió y que esas tres fuerzas han hecho imposible de ignorar.
+      <!-- Architecture layers -->
+      <div>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Architecture</span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+        <div class="space-y-2">
+          {layers.map((layer) => (
+            <div class="flex items-start gap-4 rounded-xl border border-border bg-card p-5">
+              <span class="font-mono text-[0.65rem] text-dim w-6 flex-shrink-0 mt-0.5">{layer.level}</span>
+              <span class="text-lg flex-shrink-0">{layer.icon}</span>
+              <div class="flex-1">
+                <p class="font-semibold text-sm text-foreground mb-1">{layer.name}</p>
+                <p class="text-sm text-muted-foreground">{layer.desc}</p>
+              </div>
+              {layer.level === "L4" && (
+                <span class="font-mono text-[0.6rem] bg-accent/10 text-accent px-2 py-0.5 rounded-full flex-shrink-0">Optional</span>
+              )}
+            </div>
+          ))}
+        </div>
+        <p class="font-mono text-[0.65rem] text-dim mt-3 italic">
+          L4 (Narrative) is opt-in. The system works without it. It adds engagement and cultural coherence for teams that want it.
         </p>
       </div>
-    </div>
-  </section>
 
-  <!-- El experimento -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <HighlightBox>
-        <p class="text-sm leading-relaxed text-muted-foreground">
-          <strong class="text-accent">Numen Games es el primer experimento.</strong> Estamos construyendo NWOS desde dentro, usándolo como sistema operativo de la propia empresa. La proyección narrativa se llama Numinia. Los agentes digitales tienen gremio, rango y misiones. Las decisiones tienen registro. Los rituales tienen nombre. No lo describimos como si funcionara — lo estamos viviendo.
-        </p>
-      </HighlightBox>
-    </div>
-  </section>
-
-  <!-- Tags conceptuales -->
-  <section class="border-t border-border py-16">
-    <div class="mx-auto max-w-[1100px] px-6">
-      <SectionHeader
-        label="Marco conceptual"
-        title="Las ideas que lo sostienen"
-      />
-      <div class="mt-6 flex flex-wrap gap-2">
-        {[
-          "Semiótica de Peirce", "Arquetipos de Jung", "Teoría de juegos",
-          "Organizational Design", "LLM Agents", "Role Theory",
-          "Knowledge Management", "Cultural Infrastructure", "Narrative Identity",
-          "Work OS", "Gamification (superada)", "Digital-Physical Org",
-        ].map((tag) => (
-          <Tag text={tag} />
-        ))}
+      <!-- Features -->
+      <div>
+        <div class="mb-6 flex items-center gap-3">
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Features</span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+        <div class="space-y-4">
+          {features.map((f) => (
+            <div class="rounded-xl border border-border bg-card overflow-hidden">
+              <div class="p-5 border-b border-border/50">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                  <span class="font-mono text-[0.6rem] text-dim">{f.id}</span>
+                  <span class="inline-flex rounded-full bg-green/10 px-2.5 py-0.5 font-mono text-[0.6rem] text-green">Active</span>
+                  <span class:list={[
+                    "inline-flex rounded-full px-2.5 py-0.5 font-mono text-[0.6rem]",
+                    f.default === "on" ? "bg-accent/10 text-accent" : "bg-yellow/10 text-yellow"
+                  ]}>
+                    {f.default === "on" ? "Default: on" : "Opt-in"}
+                  </span>
+                </div>
+                <h3 class="font-display text-xl text-foreground mb-2">{f.name}</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+              </div>
+              <div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
+                <div class="p-4">
+                  <p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim mb-2">Why it matters</p>
+                  <p class="text-xs text-muted-foreground leading-relaxed">{f.why}</p>
+                </div>
+                <div class="p-4">
+                  <p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim mb-2">vs. alternatives</p>
+                  <p class="text-xs text-muted-foreground leading-relaxed">{f.compare}</p>
+                </div>
+              </div>
+              <div class="px-5 py-3 bg-card/50 border-t border-border/50">
+                <p class="font-mono text-[0.6rem] text-dim">
+                  <span class="text-foreground/50 mr-2">Fields:</span>
+                  {f.fields.join(" · ")}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- CTA -->
-  <section class="border-t border-border py-20">
-    <div class="mx-auto max-w-[1100px] px-6 text-center">
-      <h2 class="font-display text-3xl text-foreground">¿Tu organización necesita un nuevo OS?</h2>
-      <p class="mx-auto mt-4 max-w-md text-muted-foreground">
-        Estoy explorando las primeras organizaciones externas que quieran implementar NWOS. Si esto te resuena, hablemos.
-      </p>
-      <a
-        href="/contacto"
-        class="mt-8 inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
-      >
-        Hablemos
-      </a>
+      <!-- Design principles -->
+      <div>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Design principles</span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {principles.map((p) => (
+            <div class="rounded-xl border border-border bg-card p-5">
+              <p class="font-semibold text-sm text-foreground mb-2">{p.name}</p>
+              <p class="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Implementation -->
+      <div>
+        <div class="mb-4 flex items-center gap-3">
+          <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Implementation</span>
+          <span class="h-px flex-1 bg-border"></span>
+        </div>
+        <div class="rounded-xl border border-border bg-card p-6">
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-4">Requirements</p>
+          <div class="grid sm:grid-cols-3 gap-4 mb-6">
+            {[
+              { req: "Git repository", note: "GitHub, GitLab, or self-hosted" },
+              { req: "Markdown editor", note: "Any editor that reads .md files" },
+              { req: "AI agent access", note: "Optional. Unlocks the agent layer." },
+            ].map((r) => (
+              <div class="flex items-start gap-3">
+                <span class="text-green mt-0.5 flex-shrink-0">✓</span>
+                <div>
+                  <p class="text-sm font-medium text-foreground">{r.req}</p>
+                  <p class="text-xs text-muted-foreground">{r.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="border-t border-border pt-5">
+            <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">Reference implementation</p>
+            <p class="text-sm text-muted-foreground mb-3">
+              The repository <code class="font-mono text-xs text-accent">numengames/numinia-digital-agents</code> is the live reference implementation of the NWOS, licensed CC0.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="https://github.com/numengames/numinia-digital-agents"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-accent hover:text-accent/80 transition-colors"
+              >
+                View on GitHub →
+              </a>
+              <a
+                href="/archive"
+                class="inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim hover:text-foreground transition-colors"
+              >
+                Browse the Archive →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Narrative layer note -->
+      <div class="rounded-xl border border-accent/20 bg-accent/5 p-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-3">About the Narrative Layer</p>
+        <p class="text-sm text-muted-foreground leading-relaxed mb-3">
+          The NWOS was built alongside <strong class="text-foreground">Numinia</strong> — a narrative universe where guilds, missions, and archives are not metaphors but the actual vocabulary of work. The narrative layer is not required, but it changes how people relate to the system.
+        </p>
+        <p class="text-sm text-muted-foreground leading-relaxed">
+          If you want the system without the narrative, it's still the same files, the same git workflow, the same agents. The narrative is an optional skin that makes the system feel alive.
+        </p>
+      </div>
+
     </div>
   </section>
 </Layout>
