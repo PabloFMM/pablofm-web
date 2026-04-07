@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://astro.build/config
 export default defineConfig({
 	site: "https://pablofm.com",
-	output: "hybrid",
+	output: "static",
 	adapter: vercel(),
 	integrations: [react(), tailwind(), sitemap()],
 	vite: {
