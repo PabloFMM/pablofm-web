@@ -139,7 +139,7 @@ const FOLDERS = [
 ];
 const HUMAN_COST = { XS: 130, S: 520, M: 1560, L: 3900, XL: 7800 };
 const COMPUTE_MOCK = { XS: 0.5, S: 1.5, M: 4, L: 10, XL: 25 };
-const DETAIL_IDS = new Set(["mis-016","mis-037","mis-051","mis-053","mis-052","mis-054","mis-055"]);
+// All missions have their own detail page at /missions/[id]
 
 const PRIORITY_COLOR = {
   critical: "bg-red/10 text-red",
@@ -217,10 +217,10 @@ function fmtSmall(n) { return n == null ? null : n < 1 ? "€" + n.toFixed(2) : 
 
 // ── Card builder ─────────────────────────────────────────────────────────────
 function buildCard(m) {
-  const cardCls = (STATUS_COLOR[m.status] || STATUS_COLOR.todo) + " transition-colors rounded-lg border p-3.5 mission-card" + (m.hasDetail ? " cursor-pointer" : "");
+  const cardCls = (STATUS_COLOR[m.status] || STATUS_COLOR.todo) + " transition-colors rounded-lg border p-3.5 mission-card cursor-pointer";
   const idCls = STATUS_ID_COLOR[m.status] || "text-dim";
-  const el = m.hasDetail ? document.createElement("a") : document.createElement("div");
-  if (m.hasDetail) el.href = "/misiones/" + m.id.toLowerCase();
+  const el = document.createElement("a");
+  el.href = "/missions/" + m.id.toLowerCase();
   el.className = cardCls;
   el.dataset.status = m.status;
   el.dataset.priority = m.priority;
@@ -315,7 +315,7 @@ async function loadMissions() {
       ...m,
       humanCostEur: HUMAN_COST[m.effort] || 520,
       computeCostEur: m.type === "biological" ? null : (COMPUTE_MOCK[m.effort] || 4),
-      hasDetail: m.hasDetail || DETAIL_IDS.has((m.id || "").toLowerCase()),
+      hasDetail: true, // every mission links to /missions/[id]
     }));
   } catch (e) {
     console.error("Failed to load missions-index.json:", e);
