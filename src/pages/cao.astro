@@ -4,20 +4,20 @@ import PageHero from "@/components/PageHero.astro";
 
 // Métricas de la CAO — actualizadas por los agentes
 const metrics = {
-  updated: "2026-04-05",
-  period: "2026-04-02 / 2026-04-05",
+  updated: "2026-04-07",
+  period: "2026-04-02 / 2026-04-07",
   agentes: [
     {
-      id: "centinela-01",
-      nombre: "Centinela-01",
-      rol: "Operations & Coordination",
+      id: "nimrod",
+      nombre: "Nimrod",
+      rol: "Guardián de las Puertas",
       gremio: "Centinelas",
       modelo: "claude-sonnet-4.6",
       estado: "activo",
-      misiones: 47,
-      prs: 10,
-      docs: 12,
-      coste: 50,
+      misiones: 58,
+      prs: 41,
+      docs: 80,
+      coste: 100,
       color: "accent",
     },
     {
@@ -60,6 +60,19 @@ const metrics = {
       color: "purple",
     },
     {
+      id: "adonaz",
+      nombre: "Adonaz",
+      rol: "Archivista General",
+      gremio: "Exégetas",
+      modelo: "claude-sonnet-4.6",
+      estado: "activo",
+      misiones: 2,
+      prs: 0,
+      docs: 5,
+      coste: 2,
+      color: "blue",
+    },
+    {
       id: "procyon",
       nombre: "Procyon",
       rol: "CAO Coordinator",
@@ -74,10 +87,10 @@ const metrics = {
     },
   ],
   totales: {
-    misiones: 47,
-    coste: 50,
-    activos: 1,
-    total: 5,
+    misiones: 58,
+    coste: 102,
+    activos: 2,
+    total: 6,
   },
 };
 
