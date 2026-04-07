@@ -107,7 +107,7 @@ const fmtSmall = (n: number | null) =>
               class={`filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors
                 ${p === "all" ? "border-accent bg-accent/10 text-accent active" : "border-border text-dim hover:border-accent/50 hover:text-foreground"}`}
             >
-              {p === "all" ? "All" : `${PRIORITY_ICON[p as MissionPriority]} ${p.charAt(0).toUpperCase() + p.slice(1)}`}
+              {p === "all" ? "All" : PRIORITY_ICON[p as MissionPriority] + " " + p.charAt(0).toUpperCase() + p.slice(1)}
             </button>
           ))}
         </div>
