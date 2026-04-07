@@ -209,4 +209,47 @@ export const misiones: Mision[] = [
     epistemico: "Valida si el sistema CAO puede operar con múltiples humanos interactuando con el mismo agente, y cómo gestionar el contexto compartido vs. privado.",
     pragmatico: "Los Oráculos pueden delegar tareas a Nimrod directamente, sin depender de Pablo como intermediario. La CAO escala."
   },
+  {
+    id: "MIS-055", titulo: "Sistema de Nomenclatura Dual (Narrative + Gamification Dial)",
+    area: "CAO", gremio: "Exegetas", tipo: "híbrido", prioridad: "crítica", esfuerzo: "L", estado: "en-curso",
+    historia: "Como organización que quiere adoptar el NWOS, quiero elegir el nivel de narrativa y de gamificación de mi implementación, para que el sistema hable mi idioma sin perder ninguna funcionalidad.",
+    criterios: [
+      "Tabla de equivalencias completa: vocabulario Numinia ↔ vocabulario negocio para 5 niveles",
+      "Narrative Dial 1-10 documentado con ejemplos",
+      "Gamification Dial 1-10 con 5 umbrales reales (None/Visibility/Achievement/Progression/Full Economy)",
+      "Página /idioma live en pablofm.com",
+      "DEC-006 creada una vez validado el modelo",
+    ],
+    epistemico: "La narrativa como feature opcional, no como requisito. Resuelve la Tensión #1 del Wardley Map.",
+    pragmatico: "Desbloquea ICPs que rechazaban el NWOS por el vocabulario narrativo. Abre el mercado PYME tradicional."
+  },
+  {
+    id: "MIS-056", titulo: "i18n — Documentación y sistema bilingüe ES + EN",
+    area: "Documentación", gremio: "Exegetas", tipo: "híbrido", prioridad: "alta", esfuerzo: "L", estado: "backlog",
+    historia: "Como organización que construye en público y quiere adopción internacional, quiero que toda la documentación del NWOS esté en español e inglés.",
+    criterios: [
+      "Convención de naming definida para archivos bilingües",
+      "Páginas prioritarias en EN: /nwos, /wardley, /idioma, /agente",
+      "Toggle de idioma en la navegación",
+      "Toda página nueva: versión ES + EN",
+    ],
+    epistemico: "El idioma en que documenta un sistema define quién puede contribuir a él.",
+    pragmatico: "Adopción internacional sin fricción. Inversores y clientes en inglés pueden leer el sistema directamente."
+  },
+  {
+    id: "MIS-057", titulo: "QA Profundo del Sistema NWOS",
+    area: "CAO", gremio: "Centinelas", tipo: "híbrido", prioridad: "crítica", esfuerzo: "XL", estado: "en-curso",
+    historia: "Como equipo de agentes digitales y biológicos, queremos hacer un QA profundo del sistema NWOS completo, para garantizar coherencia total antes de seguir creciendo.",
+    criterios: [
+      "Arquitectura agentes migrada a capa raíz plana (agents/nimrod/)",
+      "STANDARDS.md v1.0.0 creado",
+      "P-006 Session Close Protocol creado",
+      "APPROVAL-REQUEST template creado",
+      "10 seminales en canon/ con knowledge graph",
+      "Normalización retroactiva: timestamps ISO 8601, IDs 5 dígitos",
+      "Score sistema: 5/10 → 8.8/10",
+    ],
+    epistemico: "Un QA profundo revela las inconsistencias que solo se ven cuando el sistema se observa como un todo.",
+    pragmatico: "El sistema necesita ser coherente antes de incorporar nuevos agentes y nuevas organizaciones."
+  },
 ];
