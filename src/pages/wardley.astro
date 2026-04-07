@@ -402,7 +402,7 @@ const layers = [
           },
           {
             t: "LLM commoditization window: 18–24 months",
-            d: "Notion AI, Confluence AI, and Microsoft Copilot will offer native agents. The moat is not LLM integration — it's the Mission System + Decision Registry + Blueprints as a coherent OS.",
+            d: "Notion AI, Confluence AI, and Microsoft Copilot will offer native agents with the same LLMs. Using AI is not a moat — it's table stakes. The real moat is what the system doesn't lose: every mission closed with an Execution Reality section, every decision with its rejected alternatives, every blueprint with its delta table. That knowledge can't live anywhere else. An organization with 1 year of NWOS has 365 days of structured institutional memory that can't be imported into Notion. That inertia grows with time.",
             sev: "high",
           },
           {
@@ -428,6 +428,48 @@ const layers = [
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The Moat -->  
+  <section class="py-16 border-t border-border">
+    <div class="mx-auto max-w-[800px] px-6">
+      <div class="mb-6 flex items-center gap-3">
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">The strategic bet</span>
+        <span class="h-px flex-1 bg-border"></span>
+      </div>
+      <div class="rounded-2xl border border-accent/30 bg-accent/5 p-7 mb-6">
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">The moat is what the system doesn't lose</p>
+        <p class="text-sm text-muted-foreground leading-relaxed mb-4">
+          Notion AI can answer questions about what you have in Notion. But it can't answer:
+        </p>
+        <div class="space-y-3 mb-6">
+          {[
+            { q: "\"Why did we make this decision 6 months ago, what alternatives did we reject, and what did we learn executing it?\"", why: "Notion has documents. NWOS has a Decision Registry — append-only, with rejected alternatives and explicit reasoning." },
+            { q: "\"What have we learned across the last 20 missions that should change how we approach the next ones?\"", why: "Notion has tasks with checkboxes. NWOS missions have Epistemic Value and Execution Reality — the learning is the artifact." },
+            { q: "\"What's the gap between where we are today and where we need to be, and which missions close it?\"", why: "Notion has pages. NWOS Blueprints have delta tables that map gaps to missions explicitly." },
+          ].map((item) => (
+            <div class="rounded-xl border border-border bg-card/50 p-4">
+              <p class="text-sm italic text-foreground/70 mb-2">{item.q}</p>
+              <p class="font-mono text-[0.6rem] text-accent">→ {item.why}</p>
+            </div>
+          ))}
+        </div>
+        <div class="border-t border-border/50 pt-5">
+          <p class="text-sm text-muted-foreground leading-relaxed mb-3">
+            <strong class="text-foreground">Notion stores what you did.</strong> The NWOS stores what you learned doing it. That difference can't be bridged with an AI plugin — it requires redesigning how the organization works from the root.
+          </p>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            An organization with 1 year of NWOS has 365 days of decisions with context, missions with Execution Reality, and blueprints updated week by week. That archive is irreplaceable. And it can't be imported into any other tool.
+          </p>
+        </div>
+      </div>
+      <div class="rounded-xl border border-border bg-card p-5">
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">The window: 18–24 months</p>
+        <p class="text-sm text-muted-foreground leading-relaxed">
+          The goal is to establish Mission System + Decision Registry + Blueprints as the standard for AI-integrated organizations before large players commoditize individual components. Not to be the first to use LLMs — to be the first to build knowledge infrastructure that compounds.
+        </p>
       </div>
     </div>
   </section>
