@@ -1,6 +1,6 @@
-// missions.ts — reads directly from numinia-digital-agents repo at build time
-// Source of truth: ../numinia-digital-agents/missions/**/*.md
-// Falls back to static data if repo not available (e.g. Vercel CI without submodule)
+// missions.ts — fetches mission .md files from numinia-digital-agents via GitHub API at build time
+// Repo: https://github.com/numengames/numinia-digital-agents (public, CC0)
+// Fallback: local filesystem when running in dev with both repos side by side
 
 import fs from "node:fs";
 import path from "node:path";
@@ -22,22 +22,18 @@ export interface Mission {
   status: MissionStatus;
   hasDetail?: boolean;
   assignedTo?: string;
-  parentMission?: string;
-  subMissions?: string[];
   started?: string;
   completed?: string;
-  freezeReason?: string;
-  // Costs — mock until MIS-048
   humanCostEur: number;
   computeCostEur: number | null;
 }
 
-// Human cost estimate: effort × rate (€65/h avg freelancer)
 const HUMAN_COST: Record<MissionEffort, number> = { XS: 130, S: 520, M: 1560, L: 3900, XL: 7800 };
-// Compute mock estimate (digital/hybrid — biological = null)
 const COMPUTE_MOCK: Record<MissionEffort, number> = { XS: 0.5, S: 1.5, M: 4, L: 10, XL: 25 };
 
-// ── YAML frontmatter parser (no deps needed — simple regex) ──────────────────
+const DETAIL_IDS = new Set(["MIS-016", "MIS-037", "MIS-051", "MIS-053", "MIS-052", "MIS-054", "MIS-055"]);
+
+// ── Frontmatter parser ────────────────────────────────────────────────────────
 function parseFrontmatter(content: string): Record<string, string> {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
   if (!match) return {};
@@ -47,7 +43,6 @@ function parseFrontmatter(content: string): Record<string, string> {
     if (colonIdx === -1) continue;
     const key = line.slice(0, colonIdx).trim();
     let val = line.slice(colonIdx + 1).trim();
-    // Remove surrounding quotes
     if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
@@ -56,150 +51,179 @@ function parseFrontmatter(content: string): Record<string, string> {
   return result;
 }
 
-// ── Normalize values from repo frontmatter → typed fields ───────────────────
-function normalizeStatus(v: string): MissionStatus {
+// ── Normalizers ───────────────────────────────────────────────────────────────
+function normalizeId(raw: string): string {
+  // MIS-00037 → MIS-037, MIS-1 → MIS-001
+  const m = raw.match(/^MIS-(\d+)/i);
+  if (!m) return raw;
+  const n = parseInt(m[1], 10);
+  return "MIS-" + String(n).padStart(3, "0");
+}
+
+function normalizeStatus(v: string, folderStatus: MissionStatus): MissionStatus {
   const map: Record<string, MissionStatus> = {
-    "todo": "todo", "en-curso": "in-progress", "in-progress": "in-progress",
-    "active": "in-progress", "en-revision": "in-review", "in-review": "in-review",
-    "revision": "in-review", "done": "done", "freeze": "freeze", "frozen": "freeze",
-    "cancelled": "cancelled", "backlog": "todo",
+    todo: "todo", backlog: "todo",
+    "in-progress": "in-progress", "en-curso": "in-progress", active: "in-progress",
+    "in-review": "in-review", revision: "in-review", "en-revision": "in-review",
+    done: "done", freeze: "freeze", frozen: "freeze", cancelled: "cancelled",
   };
-  return map[v?.toLowerCase()] ?? "todo";
+  return map[v?.toLowerCase()] ?? folderStatus;
 }
 
 function normalizePriority(v: string): MissionPriority {
   const map: Record<string, MissionPriority> = {
-    "critical": "critical", "crítica": "critical", "critica": "critical",
-    "high": "high", "alta": "high",
-    "medium": "medium", "media": "medium",
-    "low": "low", "baja": "low",
+    critical: "critical", crítica: "critical", critica: "critical",
+    high: "high", alta: "high",
+    medium: "medium", media: "medium",
+    low: "low", baja: "low",
   };
   return map[v?.toLowerCase()] ?? "medium";
 }
 
 function normalizeType(v: string): MissionType {
   const map: Record<string, MissionType> = {
-    "digital": "digital", "biological": "biological",
-    "biológico": "biological", "biologico": "biological",
-    "hybrid": "hybrid", "híbrido": "hybrid", "hibrido": "hybrid",
+    digital: "digital",
+    biological: "biological", biológico: "biological", biologico: "biological",
+    hybrid: "hybrid", híbrido: "hybrid", hibrido: "hybrid",
   };
   return map[v?.toLowerCase()] ?? "hybrid";
 }
 
 function normalizeEffort(v: string): MissionEffort {
-  const valid = ["XS", "S", "M", "L", "XL"];
-  return (valid.includes(v?.toUpperCase()) ? v.toUpperCase() : "M") as MissionEffort;
+  return (["XS", "S", "M", "L", "XL"].includes(v?.toUpperCase()) ? v.toUpperCase() : "M") as MissionEffort;
 }
 
 function normalizeGuild(v: string): MissionGuild {
   const map: Record<string, MissionGuild> = {
-    "sentinels": "Sentinels", "centinelas": "Sentinels",
-    "alchemists": "Alchemists", "alquimistas": "Alchemists",
-    "exegetes": "Exegetes", "exegetas": "Exegetes",
-    "procurators": "Procurators", "procuradores": "Procurators",
+    sentinels: "Sentinels", centinelas: "Sentinels",
+    alchemists: "Alchemists", alquimistas: "Alchemists",
+    exegetes: "Exegetes", exegetas: "Exegetes",
+    procurators: "Procurators", procuradores: "Procurators",
   };
   return map[v?.toLowerCase()] ?? "Sentinels";
 }
 
-// ── Read .md files from a folder ─────────────────────────────────────────────
-function readMissionsFromFolder(folderPath: string, status: MissionStatus): Mission[] {
-  if (!fs.existsSync(folderPath)) return [];
-  const files = fs.readdirSync(folderPath).filter(f => f.endsWith(".md") && f !== "TEMPLATE.md");
-  const missions: Mission[] = [];
+function mdToMission(content: string, folderStatus: MissionStatus): Mission | null {
+  const fm = parseFrontmatter(content);
+  const rawId = fm.id || "";
+  if (!rawId.toUpperCase().startsWith("MIS-")) return null;
 
-  for (const file of files) {
-    try {
-      const content = fs.readFileSync(path.join(folderPath, file), "utf-8");
-      const fm = parseFrontmatter(content);
+  const id = normalizeId(rawId);
+  const effort = normalizeEffort(fm.effort);
+  const type = normalizeType(fm.tipo || fm.type);
 
-      const id = fm.id?.replace(/^"/, "").replace(/"$/, "") || file.replace(/\.md$/, "").split("-").slice(0, 2).join("-").toUpperCase();
-      if (!id.startsWith("MIS-")) continue;
-
-      // Normalize ID to 3-digit format (MIS-037 not MIS-00037)
-      const normalizedId = id.replace(/^MIS-0+(\d{1,3})$/, "MIS-$1").replace(/^MIS-(\d)$/, "MIS-00$1").replace(/^MIS-(\d{2})$/, "MIS-0$1");
-
-      const rawStatus = fm.status || status;
-      const finalStatus = normalizeStatus(rawStatus);
-      const effort = normalizeEffort(fm.effort);
-      const type = normalizeType(fm.tipo || fm.type);
-
-      const mission: Mission = {
-        id: normalizedId,
-        title: fm.title || fm.titulo || normalizedId,
-        area: fm.area || "CAO",
-        guild: normalizeGuild(fm.guild),
-        type,
-        priority: normalizePriority(fm.priority || fm.prioridad),
-        effort,
-        status: finalStatus,
-        assignedTo: fm.assigned_to || fm.assignedTo || undefined,
-        parentMission: fm.parent_mission || undefined,
-        started: fm.started || undefined,
-        completed: fm.completed || undefined,
-        freezeReason: fm.freeze_reason || undefined,
-        humanCostEur: HUMAN_COST[effort],
-        computeCostEur: type === "biological" ? null : COMPUTE_MOCK[effort],
-      };
-
-      missions.push(mission);
-    } catch {
-      // skip malformed files
-    }
-  }
-
-  return missions;
+  return {
+    id,
+    title: fm.title || fm.titulo || id,
+    area: fm.area || "CAO",
+    guild: normalizeGuild(fm.guild),
+    type,
+    priority: normalizePriority(fm.priority || fm.prioridad),
+    effort,
+    status: normalizeStatus(fm.status, folderStatus),
+    assignedTo: fm.assigned_to || undefined,
+    started: fm.started || undefined,
+    completed: fm.completed || undefined,
+    hasDetail: DETAIL_IDS.has(id),
+    humanCostEur: HUMAN_COST[effort],
+    computeCostEur: type === "biological" ? null : COMPUTE_MOCK[effort],
+  };
 }
 
-// ── IDs that have a detail page in /misiones/[id] ───────────────────────────
-const DETAIL_IDS = new Set([
-  "MIS-016", "MIS-037", "MIS-051", "MIS-053", "MIS-052", "MIS-054", "MIS-055",
-]);
+// ── GitHub API loader (used on Vercel / CI) ───────────────────────────────────
+const REPO = "numengames/numinia-digital-agents";
+const BRANCH = "main";
+const FOLDERS: [string, MissionStatus][] = [
+  ["missions/queue",  "todo"],
+  ["missions/active", "in-progress"],
+  ["missions/review", "in-review"],
+  ["missions/done",   "done"],
+  ["missions/freeze", "freeze"],
+  // legacy fallback
+  ["missions/backlog","todo"],
+];
 
-// ── Main loader ──────────────────────────────────────────────────────────────
-function loadMissions(): Mission[] {
-  const repoBase = path.resolve(
-    import.meta.dirname ?? path.dirname(new URL(import.meta.url).pathname),
-    "../../..",
-    "numinia-digital-agents/missions"
-  );
-
-  const folders: [string, MissionStatus][] = [
-    [path.join(repoBase, "queue"),   "todo"],
-    [path.join(repoBase, "active"),  "in-progress"],
-    [path.join(repoBase, "review"),  "in-review"],
-    [path.join(repoBase, "done"),    "done"],
-    [path.join(repoBase, "freeze"),  "freeze"],
-    // Legacy fallback
-    [path.join(repoBase, "backlog"), "todo"],
-  ];
-
+async function fetchFromGitHub(): Promise<Mission[]> {
   const seen = new Set<string>();
   const all: Mission[] = [];
 
-  for (const [folder, status] of folders) {
-    const batch = readMissionsFromFolder(folder, status);
-    for (const m of batch) {
-      if (!seen.has(m.id)) {
-        seen.add(m.id);
-        all.push({ ...m, hasDetail: DETAIL_IDS.has(m.id) });
+  for (const [folder, folderStatus] of FOLDERS) {
+    const url = "https://api.github.com/repos/" + REPO + "/contents/" + folder + "?ref=" + BRANCH;
+    let files: Array<{ name: string; download_url: string }>;
+
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": "pablofm-web-build" } });
+      if (!res.ok) continue;
+      files = await res.json();
+    } catch {
+      continue;
+    }
+
+    for (const file of files) {
+      if (!file.name.endsWith(".md") || file.name === "TEMPLATE.md") continue;
+      try {
+        const raw = await fetch(file.download_url);
+        const content = await raw.text();
+        const mission = mdToMission(content, folderStatus);
+        if (mission && !seen.has(mission.id)) {
+          seen.add(mission.id);
+          all.push(mission);
+        }
+      } catch {
+        // skip malformed
       }
     }
   }
 
-  // Sort by ID number
-  all.sort((a, b) => {
-    const na = parseInt(a.id.replace("MIS-", ""), 10);
-    const nb = parseInt(b.id.replace("MIS-", ""), 10);
-    return na - nb;
-  });
+  return all;
+}
+
+// ── Local filesystem loader (dev with both repos present) ─────────────────────
+function loadFromFilesystem(): Mission[] {
+  const repoBase = path.resolve(
+    path.dirname(new URL(import.meta.url).pathname),
+    "../../..",
+    "numinia-digital-agents/missions"
+  );
+  if (!fs.existsSync(repoBase)) return [];
+
+  const seen = new Set<string>();
+  const all: Mission[] = [];
+
+  for (const [folder, folderStatus] of FOLDERS) {
+    const folderPath = path.join(repoBase, "..", folder);
+    if (!fs.existsSync(folderPath)) continue;
+    const files = fs.readdirSync(folderPath).filter(f => f.endsWith(".md") && f !== "TEMPLATE.md");
+    for (const file of files) {
+      try {
+        const content = fs.readFileSync(path.join(folderPath, file), "utf-8");
+        const mission = mdToMission(content, folderStatus);
+        if (mission && !seen.has(mission.id)) {
+          seen.add(mission.id);
+          all.push(mission);
+        }
+      } catch { /* skip */ }
+    }
+  }
 
   return all;
 }
 
-export const missions: Mission[] = loadMissions();
+// ── Main loader ───────────────────────────────────────────────────────────────
+async function loadMissions(): Promise<Mission[]> {
+  // Try local first (dev mode)
+  const local = loadFromFilesystem();
+  if (local.length > 0) {
+    return local.sort((a, b) => parseInt(a.id.slice(4)) - parseInt(b.id.slice(4)));
+  }
+  // Fetch from GitHub (Vercel / CI)
+  const remote = await fetchFromGitHub();
+  return remote.sort((a, b) => parseInt(a.id.slice(4)) - parseInt(b.id.slice(4)));
+}
 
-// ── Display helpers ──────────────────────────────────────────────────────────
+export const missions: Mission[] = await loadMissions();
 
+// ── Display helpers ───────────────────────────────────────────────────────────
 export const PRIORITY_ORDER: Record<MissionPriority, number> = {
   critical: 0, high: 1, medium: 2, low: 3,
 };
