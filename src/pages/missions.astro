@@ -14,11 +14,8 @@ import {
   AREAS,
   type MissionStatus,
   type MissionPriority,
-  type MissionEffort,
-  type MissionGuild,
 } from "@/data/missions";
 
-// Sort by priority within each group
 const sorted = [...missions].sort(
   (a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
 );
@@ -28,56 +25,73 @@ const byStatus = (status: MissionStatus) => sorted.filter(m => m.status === stat
 const columns: { key: MissionStatus; label: string; accent: string; counter: string }[] = [
   { key: "todo",        label: "To Do",       accent: "text-dim",       counter: "bg-border" },
   { key: "in-progress", label: "In Progress", accent: "text-accent",    counter: "bg-accent/20" },
-  { key: "in-review",  label: "In Review",   accent: "text-yellow",    counter: "bg-yellow/20" },
-  { key: "done",       label: "Done",        accent: "text-green-400", counter: "bg-green/20" },
+  { key: "in-review",   label: "In Review",   accent: "text-yellow",    counter: "bg-yellow/20" },
+  { key: "done",        label: "Done",        accent: "text-green-400", counter: "bg-green/20" },
 ];
 
 const frozenMissions = byStatus("freeze");
 
-// Stats
 const total = missions.length;
 const doneCount = byStatus("done").length;
 const inProgressCount = byStatus("in-progress").length;
 const criticalCount = missions.filter(m => m.priority === "critical").length;
 
-// Total mock ROI
 const totalHuman = missions.reduce((s, m) => s + m.humanCostEur, 0);
 const totalCompute = missions.reduce((s, m) => s + (m.computeCostEur ?? 0), 0);
 
 const fmt = (n: number) =>
-  n >= 1000 ? `€${(n / 1000).toFixed(1)}k` : `€${n.toFixed(0)}`;
+  n >= 1000 ? "€" + (n / 1000).toFixed(1) + "k" : "€" + n.toFixed(0);
 
 const fmtSmall = (n: number | null) =>
-  n == null ? null : n < 1 ? `€${n.toFixed(2)}` : `€${n.toFixed(1)}`;
+  n == null ? null : n < 1 ? "€" + n.toFixed(2) : "€" + n.toFixed(1);
+
+// Status filter buttons
+const statusFilters = ["all", "todo", "in-progress", "in-review", "done", "freeze"] as const;
+const priorityFilters = ["all", "critical", "high", "medium", "low"] as const;
+const effortFilters = ["all", "XS", "S", "M", "L", "XL"] as const;
+const guildFilters = ["all", ...GUILDS] as const;
+
+const filterBtnBase = "filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors";
+const filterBtnActive = "border-accent bg-accent/10 text-accent active";
+const filterBtnInactive = "border-border text-dim hover:border-accent/50 hover:text-foreground";
+
+const hoverByStatus: Record<MissionStatus, string> = {
+  "todo":        "hover:bg-card-hover",
+  "in-progress": "hover:bg-accent/10",
+  "in-review":   "hover:bg-yellow/10",
+  "done":        "hover:bg-green/10",
+  "freeze":      "hover:bg-dim/10",
+  "cancelled":   "hover:bg-dim/10",
+};
 ---
 
 <Layout
   title="Missions — Numen Games CAO"
-  description={`${total} missions tracked by the Numen Games CAO. Kanban board with cost estimates and filters.`}
+  description={total + " missions tracked by the Numen Games CAO. Kanban board with cost estimates and filters."}
   canonicalPath="/missions"
   activeNav="missions"
 >
   <PageHero
     label="CAO · Nimrod"
     title="Mission Board"
-    description={`${total} missions across ${AREAS.length} areas. Orchestrated by the Numen Games digital agents.`}
+    description={total + " missions across " + AREAS.length + " areas. Orchestrated by the Numen Games digital agents."}
   />
 
   <section class="pb-24">
     <div class="mx-auto max-w-[1200px] px-4 sm:px-6">
 
-      <!-- Stats row -->
+      <!-- Stats -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-10">
         {[
-          { label: "Total", value: total, cls: "border-border bg-card", vCls: "text-foreground" },
-          { label: "🔴 Critical", value: criticalCount, cls: "border-red/20 bg-red/5", vCls: "text-red" },
-          { label: "⚡ In Progress", value: inProgressCount, cls: "border-accent/20 bg-accent/5", vCls: "text-accent" },
-          { label: "✅ Done", value: doneCount, cls: "border-green/20 bg-green/5", vCls: "text-green-400" },
-          { label: "👤 Human est.", value: fmt(totalHuman), cls: "border-border bg-card", vCls: "text-foreground" },
-          { label: "🤖 Compute est.", value: fmt(totalCompute), cls: "border-accent/10 bg-card", vCls: "text-accent" },
+          { label: "Total",          value: total,              cls: "border-border bg-card",       vCls: "text-foreground" },
+          { label: "🔴 Critical",    value: criticalCount,      cls: "border-red/20 bg-red/5",       vCls: "text-red" },
+          { label: "⚡ In Progress", value: inProgressCount,    cls: "border-accent/20 bg-accent/5", vCls: "text-accent" },
+          { label: "✅ Done",        value: doneCount,           cls: "border-green/20 bg-green/5",  vCls: "text-green-400" },
+          { label: "👤 Human est.",  value: fmt(totalHuman),    cls: "border-border bg-card",        vCls: "text-foreground" },
+          { label: "🤖 Compute est.",value: fmt(totalCompute),  cls: "border-accent/10 bg-card",     vCls: "text-accent" },
         ].map(s => (
-          <div class={`rounded-xl border p-4 text-center ${s.cls}`}>
-            <p class={`font-display text-2xl sm:text-3xl ${s.vCls}`}>{s.value}</p>
+          <div class={"rounded-xl border p-4 text-center " + s.cls}>
+            <p class={"font-display text-2xl sm:text-3xl " + s.vCls}>{s.value}</p>
             <p class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-dim mt-1">{s.label}</p>
           </div>
         ))}
@@ -85,134 +99,124 @@ const fmtSmall = (n: number | null) =>
 
       <!-- Filters -->
       <div class="mb-8 space-y-3" id="filter-bar">
+
+        <!-- Status -->
         <div class="flex flex-wrap gap-2 items-center">
           <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Status</span>
-          {(["all", "todo", "in-progress", "in-review", "done", "freeze"] as const).map(s => (
+          {statusFilters.map(s => (
             <button
               data-filter="status"
               data-value={s}
-              class={`filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors
-                ${s === "all" ? "border-accent bg-accent/10 text-accent active" : "border-border text-dim hover:border-accent/50 hover:text-foreground"}`}
+              class={filterBtnBase + " " + (s === "all" ? filterBtnActive : filterBtnInactive)}
             >
               {s === "all" ? "All" : STATUS_LABEL[s as MissionStatus]}
             </button>
           ))}
         </div>
+
+        <!-- Priority -->
         <div class="flex flex-wrap gap-2 items-center">
           <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Priority</span>
-          {(["all", "critical", "high", "medium", "low"] as const).map(p => (
+          {priorityFilters.map(p => (
             <button
               data-filter="priority"
               data-value={p}
-              class={`filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors
-                ${p === "all" ? "border-accent bg-accent/10 text-accent active" : "border-border text-dim hover:border-accent/50 hover:text-foreground"}`}
+              class={filterBtnBase + " " + (p === "all" ? filterBtnActive : filterBtnInactive)}
             >
               {p === "all" ? "All" : PRIORITY_ICON[p as MissionPriority] + " " + p.charAt(0).toUpperCase() + p.slice(1)}
             </button>
           ))}
         </div>
+
+        <!-- Effort -->
         <div class="flex flex-wrap gap-2 items-center">
           <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Effort</span>
-          {(["all", "XS", "S", "M", "L", "XL"] as const).map(e => (
+          {effortFilters.map(e => (
             <button
               data-filter="effort"
               data-value={e}
-              class={`filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors
-                ${e === "all" ? "border-accent bg-accent/10 text-accent active" : "border-border text-dim hover:border-accent/50 hover:text-foreground"}`}
+              class={filterBtnBase + " " + (e === "all" ? filterBtnActive : filterBtnInactive)}
             >
               {e}
             </button>
           ))}
         </div>
+
+        <!-- Guild -->
         <div class="flex flex-wrap gap-2 items-center">
           <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Guild</span>
-          {(["all", ...GUILDS] as const).map(g => (
+          {guildFilters.map(g => (
             <button
               data-filter="guild"
               data-value={g}
-              class={`filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors
-                ${g === "all" ? "border-accent bg-accent/10 text-accent active" : "border-border text-dim hover:border-accent/50 hover:text-foreground"}`}
+              class={filterBtnBase + " " + (g === "all" ? filterBtnActive : filterBtnInactive)}
             >
               {g}
             </button>
           ))}
         </div>
-        <!-- Filter summary -->
+
         <p id="filter-summary" class="font-mono text-[0.6rem] text-dim hidden">
           Showing <span id="filter-count">0</span> missions
         </p>
       </div>
 
-      <!-- Kanban board -->
+      <!-- Kanban -->
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-4" id="kanban-board">
         {columns.map(col => {
           const colMissions = byStatus(col.key);
           return (
             <div class="flex flex-col" data-column={col.key}>
-              <!-- Column header -->
               <div class="flex items-center gap-2 mb-3 px-1">
-                <span class={`font-mono text-[0.65rem] uppercase tracking-widest font-semibold ${col.accent}`}>
+                <span class={"font-mono text-[0.65rem] uppercase tracking-widest font-semibold " + col.accent}>
                   {col.label}
                 </span>
-                <span class={`inline-flex items-center justify-center w-5 h-5 rounded-full font-mono text-[0.6rem] text-foreground ${col.counter}`}>
+                <span class={"inline-flex items-center justify-center w-5 h-5 rounded-full font-mono text-[0.6rem] text-foreground " + col.counter}>
                   {colMissions.length}
                 </span>
               </div>
-              <!-- Cards -->
-              <div class="flex flex-col gap-2 min-h-[60px]" id={`col-${col.key}`}>
+              <div class="flex flex-col gap-2 min-h-[60px]" id={"col-" + col.key}>
                 {colMissions.map(m => {
-                  const cardBase = STATUS_COLOR[m.status];
-                  const idColor = STATUS_ID_COLOR[m.status];
-                  const hoverMap: Record<MissionStatus, string> = {
-                    "todo": "hover:bg-card-hover",
-                    "in-progress": "hover:bg-accent/10",
-                    "in-review": "hover:bg-yellow/10",
-                    "done": "hover:bg-green/10",
-                    "freeze": "hover:bg-dim/10",
-                  };
+                  const cardCls = STATUS_COLOR[m.status] + " " + hoverByStatus[m.status] + (m.hasDetail ? " cursor-pointer" : "");
+                  const idCls = STATUS_ID_COLOR[m.status];
                   const El = m.hasDetail ? "a" : "div";
-                  const href = m.hasDetail ? `/misiones/${m.id.toLowerCase()}` : undefined;
+                  const href = m.hasDetail ? "/misiones/" + m.id.toLowerCase() : undefined;
                   return (
                     <El
                       href={href}
-                      class={`mission-card rounded-lg border p-3.5 transition-colors ${cardBase} ${hoverMap[m.status]} ${m.hasDetail ? "cursor-pointer" : ""}`}
+                      class={"mission-card rounded-lg border p-3.5 transition-colors " + cardCls}
                       data-status={m.status}
                       data-priority={m.priority}
                       data-effort={m.effort}
                       data-guild={m.guild}
                     >
-                      <!-- Top row: ID + effort + type -->
                       <div class="flex items-center justify-between mb-2">
-                        <span class={`font-mono text-[0.6rem] font-medium ${idColor}`}>{m.id}</span>
+                        <span class={"font-mono text-[0.6rem] font-medium " + idCls}>{m.id}</span>
                         <div class="flex items-center gap-1.5">
                           <span class="font-mono text-[0.55rem] text-dim">{TYPE_ICON[m.type]}</span>
                           <span class="font-mono text-[0.55rem] text-dim">{m.effort}</span>
-                          <span class={`inline-flex rounded-full px-1.5 py-0.5 font-mono text-[0.5rem] font-medium ${PRIORITY_COLOR[m.priority]}`}>
+                          <span class={"inline-flex rounded-full px-1.5 py-0.5 font-mono text-[0.5rem] font-medium " + PRIORITY_COLOR[m.priority]}>
                             {PRIORITY_ICON[m.priority]}
                           </span>
                         </div>
                       </div>
-                      <!-- Title -->
                       <p class="text-sm font-medium text-foreground leading-snug mb-2.5">{m.title}</p>
-                      <!-- Bottom row: guild + agent -->
                       <div class="flex items-center justify-between">
                         <span class="font-mono text-[0.55rem] text-dim">{m.guild}</span>
                         {m.assignedTo && (
-                          <span class="font-mono text-[0.5rem] text-dim opacity-70">🗡️ {m.assignedTo}</span>
+                          <span class="font-mono text-[0.5rem] text-dim opacity-70">{"🗡️ " + m.assignedTo}</span>
                         )}
                       </div>
-                      <!-- Cost row -->
                       <div class="mt-2 pt-2 border-t border-border/30 flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1" title="Estimated human cost (€65/h)">
                           <span class="font-mono text-[0.5rem] text-dim">👤</span>
                           <span class="font-mono text-[0.5rem] text-dim">{fmt(m.humanCostEur)}</span>
                         </div>
                         {m.computeCostEur != null ? (
-                          <div class="flex items-center gap-1" title={m.status === "done" ? "Actual compute cost (estimated)" : "Projected compute cost (mock)"}>
+                          <div class="flex items-center gap-1">
                             <span class="font-mono text-[0.5rem] text-accent/60">🤖</span>
-                            <span class={`font-mono text-[0.5rem] ${m.status === "done" ? "text-accent" : "text-accent/50"}`}>
-                              {fmtSmall(m.computeCostEur)}
-                              {m.status !== "done" && <span class="text-dim/50">*</span>}
+                            <span class={"font-mono text-[0.5rem] " + (m.status === "done" ? "text-accent" : "text-accent/50")}>
+                              {fmtSmall(m.computeCostEur)}{m.status !== "done" ? "*" : ""}
                             </span>
                           </div>
                         ) : (
@@ -233,13 +237,10 @@ const fmtSmall = (n: number | null) =>
         })}
       </div>
 
-      <!-- Freeze section (collapsed by default) -->
+      <!-- Freeze -->
       {frozenMissions.length > 0 && (
         <div class="mt-8">
-          <button
-            id="freeze-toggle"
-            class="flex items-center gap-3 w-full text-left mb-3 group"
-          >
+          <button id="freeze-toggle" class="flex items-center gap-3 w-full text-left mb-3 group">
             <span class="font-mono text-[0.65rem] uppercase tracking-widest text-dim group-hover:text-foreground transition-colors">
               ❄️ Freeze
             </span>
@@ -251,7 +252,8 @@ const fmtSmall = (n: number | null) =>
           </button>
           <div id="freeze-content" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {frozenMissions.map(m => (
-              <div class="mission-card rounded-lg border border-dim/20 bg-dim/5 p-3.5"
+              <div
+                class="mission-card rounded-lg border border-dim/20 bg-dim/5 p-3.5"
                 data-status={m.status} data-priority={m.priority}
                 data-effort={m.effort} data-guild={m.guild}
               >
@@ -267,22 +269,22 @@ const fmtSmall = (n: number | null) =>
         </div>
       )}
 
-      <!-- Legend + note -->
+      <!-- Footer -->
       <div class="mt-10 grid sm:grid-cols-2 gap-4">
         <div class="rounded-xl border border-border/50 bg-card/50 p-5">
           <p class="font-mono text-[0.65rem] uppercase tracking-widest text-accent mb-3">Cost legend</p>
           <div class="space-y-1.5">
             <p class="font-mono text-[0.6rem] text-dim">👤 Human estimate — hours × €65/h freelancer rate</p>
-            <p class="font-mono text-[0.6rem] text-dim">🤖 Compute — AI API cost (Claude). Done = real est. · Todo* = projected mock</p>
+            <p class="font-mono text-[0.6rem] text-dim">🤖 Compute — AI API cost. Done = real est. · Todo* = projected mock</p>
             <p class="font-mono text-[0.6rem] text-dim/50 mt-2">Real cost tracking active when MIS-048 is done.</p>
           </div>
         </div>
         <div class="rounded-xl border border-border/50 bg-card/50 p-5">
           <p class="font-mono text-[0.65rem] uppercase tracking-widest text-accent mb-3">About this board</p>
           <p class="font-mono text-[0.6rem] text-dim leading-relaxed">
-            {total} missions orchestrated by the Numen Games CAO.
-            Source: <span class="text-accent">numinia-digital-agents</span> repo.
-            Filters are client-side. Drag-and-drop in v2.
+            {total + " missions from the Numen Games CAO. Source: "}
+            <span class="text-accent">numinia-digital-agents</span>
+            {" repo. Filters are client-side. Drag-and-drop in v2."}
           </p>
         </div>
       </div>
@@ -292,12 +294,8 @@ const fmtSmall = (n: number | null) =>
 </Layout>
 
 <script>
-  // ── Filter logic ────────────────────────────────────────────────────────────
   const activeFilters: Record<string, string> = {
-    status: "all",
-    priority: "all",
-    effort: "all",
-    guild: "all",
+    status: "all", priority: "all", effort: "all", guild: "all",
   };
 
   const cards = document.querySelectorAll<HTMLElement>(".mission-card");
@@ -315,7 +313,6 @@ const fmtSmall = (n: number | null) =>
       card.classList.toggle("hidden", !match);
       if (match) visible++;
     });
-
     const anyActive = Object.values(activeFilters).some(v => v !== "all");
     if (summary && countEl) {
       summary.classList.toggle("hidden", !anyActive);
@@ -327,12 +324,9 @@ const fmtSmall = (n: number | null) =>
     btn.addEventListener("click", () => {
       const filterType = btn.dataset.filter!;
       const value = btn.dataset.value!;
-
       activeFilters[filterType] = value;
-
-      // Update active state for this filter group
       document.querySelectorAll<HTMLButtonElement>(
-        `.filter-btn[data-filter="${filterType}"]`
+        ".filter-btn[data-filter=\"" + filterType + "\"]"
       ).forEach(b => {
         const isActive = b.dataset.value === value;
         b.classList.toggle("active", isActive);
@@ -342,16 +336,13 @@ const fmtSmall = (n: number | null) =>
         b.classList.toggle("border-border", !isActive);
         b.classList.toggle("text-dim", !isActive);
       });
-
       applyFilters();
     });
   });
 
-  // ── Freeze toggle ────────────────────────────────────────────────────────────
   const freezeToggle = document.getElementById("freeze-toggle");
   const freezeContent = document.getElementById("freeze-content");
   const freezeChevron = document.getElementById("freeze-chevron");
-
   if (freezeToggle && freezeContent && freezeChevron) {
     freezeToggle.addEventListener("click", () => {
       const hidden = freezeContent.classList.toggle("hidden");
