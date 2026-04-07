@@ -21,6 +21,17 @@ const numaniaActive = numaniaIds.includes(activeNav ?? "");
 
     <!-- Desktop nav -->
     <div class="hidden items-center gap-1 sm:flex">
+      <a
+        href="/velo"
+        class:list={[
+          "mr-2 rounded-full border px-4 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.15em] transition-all",
+          activeNav === "velo"
+            ? "border-accent bg-accent/10 text-accent"
+            : "border-accent/40 text-accent/80 hover:border-accent hover:bg-accent/10 hover:text-accent",
+        ]}
+      >
+        Try NWOS
+      </a>
       {navItems.map((item) => {
         if (item.children) {
           return (
@@ -97,6 +108,17 @@ const numaniaActive = numaniaIds.includes(activeNav ?? "");
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden border-t border-border/50 bg-background/95 backdrop-blur-xl sm:hidden">
     <div class="flex flex-col gap-1 px-6 py-4">
+      <a
+        href="/velo"
+        class:list={[
+          "rounded-lg px-4 py-2.5 font-mono text-[0.7rem] uppercase tracking-[0.15em] transition-colors",
+          activeNav === "velo"
+            ? "bg-accent/10 text-accent"
+            : "text-accent/80 hover:bg-accent/10 hover:text-accent",
+        ]}
+      >
+        Try NWOS
+      </a>
       {navItems.map((item) => {
         if (item.children) {
           return (
