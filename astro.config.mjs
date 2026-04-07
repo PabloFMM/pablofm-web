@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
+import vercel from "@astrojs/vercel";
 import { defineConfig } from "astro/config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,6 +12,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://astro.build/config
 export default defineConfig({
 	site: "https://pablofm.com",
+	output: "hybrid",
+	adapter: vercel(),
 	integrations: [react(), tailwind(), sitemap()],
 	vite: {
 		resolve: {
