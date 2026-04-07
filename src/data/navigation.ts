@@ -26,6 +26,7 @@ export const navItems: NavItem[] = [
       { label: "Gaps", href: "/gaps", id: "gaps" },
       { label: "Agente", href: "/agente", id: "agente" },
       { label: "Continuidad", href: "/continuidad", id: "continuidad" },
+      { label: "Auditoría", href: "/auditoria", id: "auditoria" },
       { label: "Idioma", href: "/idioma", id: "idioma" },
       { label: "Wardley", href: "/wardley", id: "wardley" },
       { label: "Soluciones", href: "/soluciones", id: "soluciones" },
