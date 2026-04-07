@@ -304,55 +304,23 @@ document.getElementById("freeze-toggle")?.addEventListener("click", () => {
   }
 });
 
-// ── Main loader ───────────────────────────────────────────────────────────────
+// ── Main loader — single fetch from missions-index.json ─────────────────────
 async function loadMissions() {
-  const seen = new Set();
-  const all = [];
-
-  for (const [folder, folderStatus] of FOLDERS) {
-    const url = "https://api.github.com/repos/" + REPO + "/contents/" + folder;
-    let files;
-    try {
-      const res = await fetch(url, { headers: { "User-Agent": "pablofm-missions" } });
-      if (!res.ok) continue;
-      files = await res.json();
-    } catch { continue; }
-
-    if (!Array.isArray(files)) continue;
-
-    for (const file of files) {
-      if (!file.name.endsWith(".md") || file.name === "TEMPLATE.md") continue;
-      try {
-        const raw = await fetch(file.download_url);
-        const content = await raw.text();
-        const fm = parseFrontmatter(content);
-        const rawId = fm.id || "";
-        if (!rawId.toUpperCase().startsWith("MIS-")) continue;
-        const id = normId(rawId);
-        if (seen.has(id)) continue;
-        seen.add(id);
-
-        const effort = normEffort(fm.effort);
-        const type = normType(fm.tipo || fm.type);
-        all.push({
-          id,
-          title: fm.title || fm.titulo || id,
-          area: fm.area || "CAO",
-          guild: normGuild(fm.guild),
-          type,
-          priority: normPriority(fm.priority || fm.prioridad),
-          effort,
-          status: normStatus(fm.status, folderStatus),
-          assignedTo: fm.assigned_to || null,
-          hasDetail: DETAIL_IDS.has(id.toLowerCase()),
-          humanCostEur: HUMAN_COST[effort] || 520,
-          computeCostEur: type === "biological" ? null : (COMPUTE_MOCK[effort] || 4),
-        });
-      } catch { /* skip */ }
-    }
+  const url = "https://raw.githubusercontent.com/" + REPO + "/main/missions-index.json";
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    return (data.missions || []).map(m => ({
+      ...m,
+      humanCostEur: HUMAN_COST[m.effort] || 520,
+      computeCostEur: m.type === "biological" ? null : (COMPUTE_MOCK[m.effort] || 4),
+      hasDetail: m.hasDetail || DETAIL_IDS.has((m.id || "").toLowerCase()),
+    }));
+  } catch (e) {
+    console.error("Failed to load missions-index.json:", e);
+    return [];
   }
-
-  return all.sort((a, b) => parseInt(a.id.slice(4)) - parseInt(b.id.slice(4)));
 }
 
 async function render() {
