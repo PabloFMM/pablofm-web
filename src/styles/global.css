@@ -12,11 +12,11 @@
 		/* ── Core palette — RGB triplets for Tailwind opacity support ──────── */
 
 		/* Fondo: negro espacio */
-		--bg: 5 5 5;
+		--bg: 10 10 10;
 		--bg-card: 10 12 14;
 		--bg-card-hover: 16 20 24;
 		--border: 35 42 50;
-		--text: 241 240 235;
+		--text: 248 247 243;
 		--text-muted: 139 134 128;
 		--text-dim: 90 88 84;
 
@@ -69,11 +69,15 @@
 	}
 
 	html {
+		background-color: #0a0a0a;
+		color: #F8F7F3;
 		scroll-behavior: smooth;
 	}
 
 	body {
 		@apply min-h-screen bg-background font-sans text-foreground antialiased;
+		background-color: #0a0a0a;
+		color: #F8F7F3;
 	}
 
 	/* ── Subtle ambient glow (no grid) ──────────────────────────────────── */
@@ -106,7 +110,7 @@
 		height: 6px;
 	}
 	::-webkit-scrollbar-track {
-		background: rgb(5 5 5);
+		background: rgb(10 10 10);
 	}
 	::-webkit-scrollbar-thumb {
 		background: rgba(45, 212, 191, 0.30);

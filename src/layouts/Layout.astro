@@ -34,7 +34,7 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#050505" />
+    <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href={canonical} />
 
     <!-- Open Graph -->
@@ -86,140 +86,90 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
 
     <Footer />
 
-    <!-- MMO Starfield script — requestAnimationFrame, zero dependencies -->
-    <script>
+    <!-- Starfield script — MMO colors + alphaDir fade -->
+    <script is:inline>
       (function () {
-        const canvas = document.getElementById("starfield") as HTMLCanvasElement | null;
+        const canvas = document.getElementById("starfield");
         if (!canvas) return;
-
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // ── MMO rarity tiers ────────────────────────────────────────────────
+        // MMO Rarity tiers — mantener colores
         const TIERS = [
-          // { color, weight, minSize, maxSize, glow }
-          { color: "#E5E7EB", weight: 60, minSize: 0.6, maxSize: 1.4, glow: false },  // Common
-          { color: "#22C55E", weight: 25, minSize: 0.8, maxSize: 1.8, glow: false },  // Uncommon
-          { color: "#3B82F6", weight: 10, minSize: 1.0, maxSize: 2.2, glow: false },  // Rare
-          { color: "#A855F7", weight: 4,  minSize: 1.5, maxSize: 3.0, glow: true  },  // Epic
-          { color: "#F97316", weight: 1,  minSize: 2.0, maxSize: 4.0, glow: true  },  // Legendary
-        ] as const;
+          { color: "255,255,255", weight: 60, minR: 0.3, maxR: 1.2 },  // Common — blanco
+          { color: "34,197,94",   weight: 25, minR: 0.5, maxR: 1.5 },  // Uncommon — verde
+          { color: "59,130,246",  weight: 10, minR: 0.6, maxR: 1.8 },  // Rare — azul
+          { color: "168,85,247",  weight: 4,  minR: 0.8, maxR: 2.5 },  // Epic — morado
+          { color: "249,115,22",  weight: 1,  minR: 1.0, maxR: 3.0 },  // Legendary — naranja
+        ];
 
-        // Build weighted lookup table
-        const pool: number[] = [];
-        TIERS.forEach((t, i) => {
-          for (let w = 0; w < t.weight; w++) pool.push(i);
-        });
+        // Weighted pool
+        const pool = [];
+        TIERS.forEach((t, i) => { for (let w = 0; w < t.weight; w++) pool.push(i); });
 
-        interface Star {
-          x: number;
-          y: number;
-          r: number;
-          tierIdx: number;
-          phase: number;      // twinkle phase offset (0–2π)
-          speed: number;      // twinkle speed multiplier
-          opacity: number;    // base opacity
-          vx: number;         // drift velocity x
-          vy: number;         // drift velocity y
-        }
-
-        const STAR_COUNT = 350;
-        let stars: Star[] = [];
-        let W = 0;
-        let H = 0;
-        let animId = 0;
+        const STAR_COUNT = 175;
+        let stars = [];
+        let W = 0, H = 0;
 
         function resize() {
-          W = canvas!.width = window.innerWidth;
-          H = canvas!.height = window.innerHeight;
-        }
-
-        function pickTier(): number {
-          return pool[Math.floor(Math.random() * pool.length)];
+          W = canvas.width = window.innerWidth;
+          H = canvas.height = window.innerHeight;
         }
 
         function initStars() {
           stars = [];
           for (let i = 0; i < STAR_COUNT; i++) {
-            const ti = pickTier();
+            const ti = pool[Math.floor(Math.random() * pool.length)];
             const t = TIERS[ti];
             stars.push({
               x: Math.random() * W,
               y: Math.random() * H,
-              r: t.minSize + Math.random() * (t.maxSize - t.minSize),
+              r: t.minR + Math.random() * (t.maxR - t.minR),
+              alpha: Math.random(),
+              alphaDir: Math.random() > 0.5 ? 1 : -1,
+              speed: Math.random() * 0.004 + 0.002,
+              vx: (Math.random() - 0.5) * 0.06,
+              vy: (Math.random() - 0.5) * 0.06,
               tierIdx: ti,
-              phase: Math.random() * Math.PI * 2,
-              speed: 0.3 + Math.random() * 0.7,
-              opacity: 0.5 + Math.random() * 0.5,
-              vx: (Math.random() - 0.5) * 0.08,
-              vy: (Math.random() - 0.5) * 0.08,
             });
           }
         }
 
-        function draw(ts: number) {
-          ctx!.clearRect(0, 0, W, H);
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
 
-          const t = ts * 0.001; // seconds
+          for (const s of stars) {
+            // Movimiento suave
+            s.x += s.vx;
+            s.y += s.vy;
+            if (s.x < -2) s.x = W + 2;
+            if (s.x > W + 2) s.x = -2;
+            if (s.y < -2) s.y = H + 2;
+            if (s.y > H + 2) s.y = -2;
 
-          for (const star of stars) {
-            // Smooth drift movement
-            star.x += star.vx;
-            star.y += star.vy;
-            // Wrap around edges
-            if (star.x < -4) star.x = W + 4;
-            if (star.x > W + 4) star.x = -4;
-            if (star.y < -4) star.y = H + 4;
-            if (star.y > H + 4) star.y = -4;
+            // Fade in/out — sistema alphaDir de /velo
+            s.alpha += s.alphaDir * s.speed;
+            if (s.alpha > 0.85) { s.alpha = 0.85; s.alphaDir = -1; }
+            if (s.alpha < 0.05) { s.alpha = 0.05; s.alphaDir = 1; }
 
-            const tier = TIERS[star.tierIdx];
-            // Twinkle: smooth sine wave
-            const twinkle = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * star.speed + star.phase));
-            const alpha = star.opacity * twinkle;
-
-            ctx!.save();
-            ctx!.globalAlpha = alpha;
-
-            if (tier.glow) {
-              // Epic / Legendary — radial glow
-              const glowR = star.r * 3.5;
-              const grad = ctx!.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowR);
-              grad.addColorStop(0, tier.color);
-              grad.addColorStop(0.35, tier.color + "88");
-              grad.addColorStop(1, tier.color + "00");
-              ctx!.fillStyle = grad;
-              ctx!.beginPath();
-              ctx!.arc(star.x, star.y, glowR, 0, Math.PI * 2);
-              ctx!.fill();
-            }
-
-            // Core dot
-            ctx!.fillStyle = tier.color;
-            ctx!.beginPath();
-            ctx!.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-            ctx!.fill();
-
-            ctx!.restore();
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${TIERS[s.tierIdx].color}, ${s.alpha})`;
+            ctx.fill();
           }
 
-          animId = requestAnimationFrame(draw);
+          requestAnimationFrame(draw);
         }
 
-        function start() {
-          if (animId) cancelAnimationFrame(animId);
-          resize();
-          initStars();
-          animId = requestAnimationFrame(draw);
-        }
-
-        // Debounced resize
-        let resizeTimer: ReturnType<typeof setTimeout>;
+        let resizeTimer;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(start, 200);
+          resizeTimer = setTimeout(() => { resize(); initStars(); }, 200);
         });
 
-        start();
+        resize();
+        initStars();
+        draw();
       })();
     </script>
   </body>
