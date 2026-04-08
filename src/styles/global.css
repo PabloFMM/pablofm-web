@@ -9,31 +9,51 @@
 		--font-sans: "DM Sans", system-ui, sans-serif;
 		--font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-		/* Core palette — RGB triplets for Tailwind opacity support */
-		--bg: 0 0 0;
-		--bg-card: 10 10 12;
-		--bg-card-hover: 18 18 22;
-		--border: 39 39 42;
-		--text: 250 250 250;
-		--text-muted: 161 161 170;
-		--text-dim: 113 113 122;
-		--accent: 249 115 22;
+		/* ── Core palette — RGB triplets for Tailwind opacity support ──────── */
 
-		/* Semantic colors */
+		/* Fondo: negro profundo */
+		--bg: 5 5 5;
+		--bg-card: 12 11 10;
+		--bg-card-hover: 20 18 16;
+		--border: 45 40 35;
+		--text: 248 244 236;
+		--text-muted: 168 158 142;
+		--text-dim: 110 100 88;
+
+		/* Accent principal: ámbar cálido (solarpunk + cyberpunk) */
+		--accent: 245 158 11;
+
+		/* ── Solarpunk mediterráneo ───────────────────────────────────────── */
+		--terracota: 193 123 74;   /* #C17B4A */
+		--ocre: 212 168 85;        /* #D4A855 */
+		--arena: 232 213 176;      /* #E8D5B0 */
+		--azul-med: 43 108 176;    /* #2B6CB0 */
+		--salvia: 107 143 94;      /* #6B8F5E */
+
+		/* ── Steampunk ───────────────────────────────────────────────────── */
+		--cobre: 184 115 51;       /* #B87333 */
+		--bronce: 139 105 20;      /* #8B6914 */
+
+		/* ── Cyberpunk contenido ─────────────────────────────────────────── */
+		--teal: 45 212 191;        /* #2DD4BF */
+		--ambar: 245 158 11;       /* #F59E0B */
+
+		/* ── Semantic colors ─────────────────────────────────────────────── */
 		--green: 34 197 94;
 		--red: 239 68 68;
 		--yellow: 234 179 8;
 		--blue: 59 130 246;
 		--purple: 168 85 247;
 
-		/* Glow (direct rgba for non-Tailwind use) */
-		--accent-glow: rgba(249, 115, 22, 0.15);
-		--veil-glow: rgba(1, 142, 161, 0.06);
+		/* ── Glow (direct rgba for non-Tailwind use) ─────────────────────── */
+		--accent-glow: rgba(245, 158, 11, 0.12);
+		--veil-glow: rgba(184, 115, 51, 0.07);
+		--cobre-glow: rgba(184, 115, 51, 0.25);
 
-		/* Radius */
+		/* ── Radius ──────────────────────────────────────────────────────── */
 		--radius: 0.75rem;
 
-		/* shadcn compat aliases */
+		/* ── shadcn compat aliases ───────────────────────────────────────── */
 		--background: var(--bg);
 		--foreground: var(--text);
 		--card: var(--bg-card);
@@ -56,7 +76,7 @@
 		@apply min-h-screen bg-background font-sans text-foreground antialiased;
 	}
 
-	/* Veil grid — malla digital del Velo de Numinia */
+	/* ── Veil grid — malla digital con tono cobre ────────────────────────── */
 	body::before {
 		content: "";
 		position: fixed;
@@ -64,25 +84,53 @@
 		z-index: 0;
 		pointer-events: none;
 		background-image:
-			linear-gradient(rgba(166, 218, 213, 0.025) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(166, 218, 213, 0.025) 1px, transparent 1px),
+			linear-gradient(rgba(184, 115, 51, 0.03) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(184, 115, 51, 0.03) 1px, transparent 1px),
 			radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent);
-		background-size: 40px 40px, 40px 40px, 100% 100%;
+		background-size: 48px 48px, 48px 48px, 100% 100%;
 	}
 
-	/* Noise texture overlay */
+	/* ── Noise texture overlay ───────────────────────────────────────────── */
 	body::after {
 		content: "";
 		position: fixed;
 		inset: 0;
 		z-index: 9999;
 		pointer-events: none;
-		opacity: 0.05;
+		opacity: 0.04;
 		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
 		background-repeat: repeat;
 	}
 
-	/* slideUp animation */
+	/* ── Custom scrollbar ────────────────────────────────────────────────── */
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+	::-webkit-scrollbar-track {
+		background: rgb(5 5 5);
+	}
+	::-webkit-scrollbar-thumb {
+		background: rgba(184, 115, 51, 0.35);
+		border-radius: 3px;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: rgba(245, 158, 11, 0.6);
+	}
+
+	/* Firefox scrollbar */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(184, 115, 51, 0.35) transparent;
+	}
+
+	/* ── Text selection ──────────────────────────────────────────────────── */
+	::selection {
+		background: rgba(245, 158, 11, 0.25);
+		color: rgb(248, 244, 236);
+	}
+
+	/* ── Animations ──────────────────────────────────────────────────────── */
 	@keyframes slideUp {
 		from {
 			opacity: 0;
@@ -92,5 +140,15 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+
+	@keyframes twinkle {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.2; }
+	}
+
+	@keyframes twinkle-slow {
+		0%, 100% { opacity: 0.9; }
+		50% { opacity: 0.15; }
 	}
 }
