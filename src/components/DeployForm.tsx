@@ -59,6 +59,10 @@ export default function DeployForm() {
           >
             Abrir workspace →
           </a>
+          <p className="mt-4 text-sm text-muted-foreground">
+            An AI agent is now researching your company and populating the workspace. Check the
+            STATUS.md file in your repo for progress.
+          </p>
         </div>
       </div>
     );

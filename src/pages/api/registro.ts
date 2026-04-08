@@ -98,6 +98,14 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
+    // Fire-and-forget: trigger agent population (don't await)
+    const baseUrl = new URL(request.url).origin;
+    fetch(`${baseUrl}/api/populate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug, companyName, email }),
+    }).catch((e) => console.error("Failed to trigger populate:", e));
+
     const repoUrl = `https://github.com/${org}/${slug}`;
 
     return new Response(
