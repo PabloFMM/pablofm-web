@@ -98,13 +98,22 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // Fire-and-forget: trigger agent population (don't await)
+    // Trigger agent population (await) — user waits for completion
     const baseUrl = new URL(request.url).origin;
-    fetch(`${baseUrl}/api/populate`, {
+    const populateRes = await fetch(`${baseUrl}/api/populate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug, companyName, email }),
-    }).catch((e) => console.error("Failed to trigger populate:", e));
+    });
+
+    if (!populateRes.ok) {
+      const text = await populateRes.text().catch(() => "");
+      console.error("Populate failed:", populateRes.status, text);
+      return new Response(
+        JSON.stringify({ error: "Error poblando el workspace. Inténtalo de nuevo." }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const repoUrl = `https://github.com/${org}/${slug}`;
 
