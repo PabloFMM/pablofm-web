@@ -75,8 +75,8 @@
 	}
 
 	body {
-		@apply min-h-screen bg-background font-sans text-foreground antialiased;
-		background-color: #0a0a0a;
+		@apply min-h-screen font-sans text-foreground antialiased;
+		background-color: transparent;
 		color: #F8F7F3;
 	}
 
