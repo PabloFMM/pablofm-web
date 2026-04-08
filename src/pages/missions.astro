@@ -28,46 +28,79 @@ import PageHero from "@/components/PageHero.astro";
         ))}
       </div>
 
+      <!-- Search bar -->
+      <div class="mb-6" id="search-container">
+        <div class="relative">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-dim" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </span>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search missions — ID, title, assignee, guild…"
+            autocomplete="off"
+            class="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 font-mono text-sm text-foreground placeholder:text-dim/40 focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/20 transition-all duration-200 hover:border-border/80"
+            aria-label="Search missions"
+          />
+          <button
+            id="search-clear"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-dim hover:text-foreground transition-colors duration-150 hidden p-0.5 rounded"
+            aria-label="Clear search"
+            tabindex="0"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <!-- Filters -->
-      <div class="mb-8 space-y-3" id="filter-bar">
+      <div class="mb-8 space-y-2.5" id="filter-bar">
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Status</span>
+          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14 shrink-0">Status</span>
           {["all","todo","in-progress","in-review","done","freeze"].map(s => (
             <button data-filter="status" data-value={s}
-              class={"filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors " + (s === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/50 hover:text-foreground")}>
+              class={"filter-btn font-mono text-[0.65rem] px-3 py-1.5 rounded-full border transition-all duration-150 " + (s === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/40 hover:text-foreground")}
+              aria-pressed={s === "all" ? "true" : "false"}>
               {s === "all" ? "All" : s === "todo" ? "To Do" : s === "in-progress" ? "In Progress" : s === "in-review" ? "In Review" : s === "done" ? "Done" : "Freeze"}
             </button>
           ))}
         </div>
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Priority</span>
+          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14 shrink-0">Priority</span>
           {["all","critical","high","medium","low"].map(p => (
             <button data-filter="priority" data-value={p}
-              class={"filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors " + (p === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/50 hover:text-foreground")}>
+              class={"filter-btn font-mono text-[0.65rem] px-3 py-1.5 rounded-full border transition-all duration-150 " + (p === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/40 hover:text-foreground")}
+              aria-pressed={p === "all" ? "true" : "false"}>
               {p === "all" ? "All" : p === "critical" ? "🔴 Critical" : p === "high" ? "🟠 High" : p === "medium" ? "🟡 Medium" : "🟢 Low"}
             </button>
           ))}
         </div>
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Effort</span>
+          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14 shrink-0">Effort</span>
           {["all","XS","S","M","L","XL"].map(e => (
             <button data-filter="effort" data-value={e}
-              class={"filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors " + (e === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/50 hover:text-foreground")}>
+              class={"filter-btn font-mono text-[0.65rem] px-3 py-1.5 rounded-full border transition-all duration-150 " + (e === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/40 hover:text-foreground")}
+              aria-pressed={e === "all" ? "true" : "false"}>
               {e}
             </button>
           ))}
         </div>
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14">Guild</span>
+          <span class="font-mono text-[0.6rem] uppercase tracking-widest text-dim w-14 shrink-0">Guild</span>
           {["all","Sentinels","Alchemists","Exegetes","Procurators"].map(g => (
             <button data-filter="guild" data-value={g}
-              class={"filter-btn font-mono text-[0.65rem] px-3 py-1 rounded-full border transition-colors " + (g === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/50 hover:text-foreground")}>
+              class={"filter-btn font-mono text-[0.65rem] px-3 py-1.5 rounded-full border transition-all duration-150 " + (g === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-dim hover:border-accent/40 hover:text-foreground")}
+              aria-pressed={g === "all" ? "true" : "false"}>
               {g}
             </button>
           ))}
         </div>
-        <p id="filter-summary" class="font-mono text-[0.6rem] text-dim hidden">
-          Showing <span id="filter-count">0</span> missions
+        <p id="filter-summary" class="font-mono text-[0.6rem] text-dim hidden pt-0.5">
+          Showing <span id="filter-count" class="text-accent">0</span> missions
         </p>
       </div>
 
@@ -84,8 +117,8 @@ import PageHero from "@/components/PageHero.astro";
               <span class={"font-mono text-[0.65rem] uppercase tracking-widest font-semibold " + col.accent}>{col.label}</span>
               <span class={"col-counter inline-flex items-center justify-center w-5 h-5 rounded-full font-mono text-[0.6rem] text-foreground " + col.counter}>0</span>
             </div>
-            <div class="col-cards flex flex-col gap-2 min-h-[60px]" id={"col-" + col.key}>
-              <div class="rounded-lg border border-dashed border-border/30 p-4 text-center">
+            <div class="col-cards flex flex-col gap-2 min-h-[80px]" id={"col-" + col.key}>
+              <div class="rounded-lg border border-dashed border-border/30 p-6 text-center">
                 <p class="font-mono text-[0.6rem] text-dim/40 loading-indicator">loading…</p>
               </div>
             </div>
@@ -95,22 +128,22 @@ import PageHero from "@/components/PageHero.astro";
 
       <!-- Freeze (hidden until data loads) -->
       <div id="freeze-section" class="mt-8 hidden">
-        <button id="freeze-toggle" class="flex items-center gap-3 w-full text-left mb-3 group">
+        <button id="freeze-toggle" class="flex items-center gap-3 w-full text-left mb-3 group" aria-expanded="false">
           <span class="font-mono text-[0.65rem] uppercase tracking-widest text-dim group-hover:text-foreground transition-colors">❄️ Freeze</span>
           <span id="freeze-counter" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-border font-mono text-[0.6rem] text-foreground">0</span>
           <span class="h-px flex-1 bg-border"></span>
-          <span id="freeze-chevron" class="font-mono text-[0.6rem] text-dim">▼ show</span>
+          <span id="freeze-chevron" class="font-mono text-[0.6rem] text-dim transition-all">▼ show</span>
         </button>
         <div id="freeze-cards" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
       </div>
 
       <!-- Footer -->
-      <div class="mt-10 grid sm:grid-cols-2 gap-4">
+      <div class="mt-12 grid sm:grid-cols-2 gap-4">
         <div class="rounded-xl border border-border/50 bg-card/50 p-5">
           <p class="font-mono text-[0.65rem] uppercase tracking-widest text-accent mb-3">Cost legend</p>
-          <div class="space-y-1.5">
-            <p class="font-mono text-[0.6rem] text-dim">👤 Human estimate — hours × €65/h freelancer rate</p>
-            <p class="font-mono text-[0.6rem] text-dim">🤖 Compute — AI API cost (mock until MIS-048)</p>
+          <div class="space-y-2">
+            <p class="font-mono text-[0.6rem] text-dim leading-relaxed">👤 Human estimate — hours × €65/h freelancer rate</p>
+            <p class="font-mono text-[0.6rem] text-dim leading-relaxed">🤖 Compute — AI API cost (mock until MIS-048)</p>
           </div>
         </div>
         <div class="rounded-xl border border-border/50 bg-card/50 p-5">
@@ -129,17 +162,8 @@ import PageHero from "@/components/PageHero.astro";
 <script>
 // ── Constants ────────────────────────────────────────────────────────────────
 const REPO = "numengames/numinia-digital-agents";
-const FOLDERS = [
-  ["missions/queue",   "todo"],
-  ["missions/active",  "in-progress"],
-  ["missions/review",  "in-review"],
-  ["missions/done",    "done"],
-  ["missions/freeze",  "freeze"],
-  ["missions/backlog", "todo"],
-];
 const HUMAN_COST = { XS: 130, S: 520, M: 1560, L: 3900, XL: 7800 };
 const COMPUTE_MOCK = { XS: 0.5, S: 1.5, M: 4, L: 10, XL: 25 };
-// All missions have their own detail page at /missions/[id]
 
 const PRIORITY_COLOR = {
   critical: "bg-red/10 text-red",
@@ -167,21 +191,6 @@ const STATUS_ID_COLOR = {
 };
 
 // ── Parsers ──────────────────────────────────────────────────────────────────
-function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return {};
-  const res = {};
-  for (const line of match[1].split("\n")) {
-    const i = line.indexOf(":");
-    if (i === -1) continue;
-    const k = line.slice(0, i).trim();
-    let v = line.slice(i + 1).trim();
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-    res[k] = v;
-  }
-  return res;
-}
-
 function normId(raw) {
   const m = raw.match(/^MIS-(\d+)/i);
   if (!m) return raw;
@@ -217,7 +226,7 @@ function fmtSmall(n) { return n == null ? null : n < 1 ? "€" + n.toFixed(2) : 
 
 // ── Card builder ─────────────────────────────────────────────────────────────
 function buildCard(m) {
-  const cardCls = (STATUS_COLOR[m.status] || STATUS_COLOR.todo) + " transition-colors rounded-lg border p-3.5 mission-card cursor-pointer";
+  const cardCls = (STATUS_COLOR[m.status] || STATUS_COLOR.todo) + " transition-all duration-150 rounded-lg border p-3.5 mission-card cursor-pointer block";
   const idCls = STATUS_ID_COLOR[m.status] || "text-dim";
   const el = document.createElement("a");
   el.href = "/missions/" + m.id.toLowerCase();
@@ -226,6 +235,8 @@ function buildCard(m) {
   el.dataset.priority = m.priority;
   el.dataset.effort = m.effort;
   el.dataset.guild = m.guild;
+  // Searchable combines key fields for fast substring match
+  el.dataset.searchable = [m.id, m.title, m.assignedTo || "", m.guild].join(" ").toLowerCase();
 
   const computeStr = m.computeCostEur != null
     ? '<div class="flex items-center gap-1"><span class="font-mono text-[0.5rem] text-accent/60">🤖</span><span class="font-mono text-[0.5rem] ' + (m.status === "done" ? "text-accent" : "text-accent/50") + '">' + fmtSmall(m.computeCostEur) + (m.status !== "done" ? "*" : "") + '</span></div>'
@@ -243,7 +254,7 @@ function buildCard(m) {
     '<p class="text-sm font-medium text-foreground leading-snug mb-2.5">' + m.title + '</p>' +
     '<div class="flex items-center justify-between">' +
       '<span class="font-mono text-[0.55rem] text-dim">' + m.guild + '</span>' +
-      (m.assignedTo ? '<span class="font-mono text-[0.5rem] text-dim opacity-70">🗡️ ' + m.assignedTo + '</span>' : '') +
+      (m.assignedTo && m.assignedTo !== "null" ? '<span class="font-mono text-[0.5rem] text-dim opacity-70">🗡️ ' + m.assignedTo + '</span>' : '') +
     '</div>' +
     '<div class="mt-2 pt-2 border-t border-border/30 flex items-center justify-between gap-2">' +
       '<div class="flex items-center gap-1"><span class="font-mono text-[0.5rem] text-dim">👤</span><span class="font-mono text-[0.5rem] text-dim">' + fmt(m.humanCostEur) + '</span></div>' +
@@ -253,22 +264,45 @@ function buildCard(m) {
   return el;
 }
 
-// ── Filters ──────────────────────────────────────────────────────────────────
+// ── Filters + Search ─────────────────────────────────────────────────────────
 const activeFilters = { status:"all", priority:"all", effort:"all", guild:"all" };
+let searchQuery = "";
 
 function applyFilters() {
+  const q = searchQuery.toLowerCase().trim();
   const cards = document.querySelectorAll(".mission-card");
   let visible = 0;
+
   cards.forEach(card => {
-    const match =
+    const matchFilters =
       (activeFilters.status === "all" || card.dataset.status === activeFilters.status) &&
       (activeFilters.priority === "all" || card.dataset.priority === activeFilters.priority) &&
       (activeFilters.effort === "all" || card.dataset.effort === activeFilters.effort) &&
       (activeFilters.guild === "all" || card.dataset.guild === activeFilters.guild);
+    const matchSearch = q === "" || (card.dataset.searchable || "").includes(q);
+    const match = matchFilters && matchSearch;
     card.classList.toggle("hidden", !match);
     if (match) visible++;
   });
-  const anyActive = Object.values(activeFilters).some(v => v !== "all");
+
+  // Per-column empty states
+  for (const key of ["todo","in-progress","in-review","done"]) {
+    const col = document.getElementById("col-" + key);
+    if (!col) continue;
+    const allCards = [...col.querySelectorAll(".mission-card")];
+    if (allCards.length === 0) continue;
+    const visibleCount = allCards.filter(c => !c.classList.contains("hidden")).length;
+    let emptyState = col.querySelector(".col-empty-state");
+    if (!emptyState) {
+      emptyState = document.createElement("div");
+      emptyState.className = "col-empty-state rounded-lg border border-dashed border-border/20 p-6 text-center";
+      emptyState.innerHTML = '<p class="font-mono text-[0.6rem] text-dim/30">no matches</p>';
+      col.appendChild(emptyState);
+    }
+    emptyState.classList.toggle("hidden", visibleCount > 0);
+  }
+
+  const anyActive = Object.values(activeFilters).some(v => v !== "all") || q !== "";
   const summary = document.getElementById("filter-summary");
   const countEl = document.getElementById("filter-count");
   if (summary && countEl) {
@@ -277,6 +311,7 @@ function applyFilters() {
   }
 }
 
+// Filter buttons
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const ft = btn.dataset.filter;
@@ -289,18 +324,46 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
       b.classList.toggle("text-accent", active);
       b.classList.toggle("border-border", !active);
       b.classList.toggle("text-dim", !active);
+      b.setAttribute("aria-pressed", active ? "true" : "false");
     });
     applyFilters();
   });
+});
+
+// Search input
+const searchInput = document.getElementById("search-input");
+const searchClear = document.getElementById("search-clear");
+
+searchInput?.addEventListener("input", (e) => {
+  searchQuery = (e.target as HTMLInputElement).value;
+  searchClear?.classList.toggle("hidden", searchQuery === "");
+  applyFilters();
+});
+
+searchClear?.addEventListener("click", () => {
+  if (searchInput) (searchInput as HTMLInputElement).value = "";
+  searchQuery = "";
+  searchClear.classList.add("hidden");
+  searchInput?.focus();
+  applyFilters();
+});
+
+// Keyboard: Escape clears search
+searchInput?.addEventListener("keydown", (e) => {
+  if ((e as KeyboardEvent).key === "Escape") {
+    searchClear?.click();
+  }
 });
 
 // ── Freeze toggle ─────────────────────────────────────────────────────────────
 document.getElementById("freeze-toggle")?.addEventListener("click", () => {
   const content = document.getElementById("freeze-cards");
   const chevron = document.getElementById("freeze-chevron");
+  const toggle = document.getElementById("freeze-toggle");
   if (content && chevron) {
     const hidden = content.classList.toggle("hidden");
     chevron.textContent = hidden ? "▼ show" : "▲ hide";
+    toggle?.setAttribute("aria-expanded", hidden ? "false" : "true");
   }
 });
 
@@ -313,9 +376,15 @@ async function loadMissions() {
     const data = await res.json();
     return (data.missions || []).map(m => ({
       ...m,
-      humanCostEur: HUMAN_COST[m.effort] || 520,
-      computeCostEur: m.type === "biological" ? null : (COMPUTE_MOCK[m.effort] || 4),
-      hasDetail: true, // every mission links to /missions/[id]
+      id: normId(m.id || ""),
+      status: normStatus(m.status, "todo"),
+      priority: normPriority(m.priority),
+      effort: normEffort(m.effort),
+      guild: normGuild(m.guild),
+      type: normType(m.type),
+      humanCostEur: HUMAN_COST[normEffort(m.effort)] || 520,
+      computeCostEur: normType(m.type) === "biological" ? null : (COMPUTE_MOCK[normEffort(m.effort)] || 4),
+      hasDetail: true,
     }));
   } catch (e) {
     console.error("Failed to load missions-index.json:", e);
@@ -367,12 +436,11 @@ async function render() {
     if (!col) continue;
     const colMissions = missions.filter(m => m.status === key);
     col.innerHTML = "";
-    // Update counter
     const counter = col.closest("[data-column]")?.querySelector(".col-counter");
     if (counter) counter.textContent = String(colMissions.length);
 
     if (colMissions.length === 0) {
-      col.innerHTML = '<div class="rounded-lg border border-dashed border-border/30 p-4 text-center"><p class="font-mono text-[0.6rem] text-dim/40">empty</p></div>';
+      col.innerHTML = '<div class="rounded-lg border border-dashed border-border/20 p-6 text-center"><p class="font-mono text-[0.6rem] text-dim/30">empty</p></div>';
     } else {
       for (const m of colMissions) col.appendChild(buildCard(m));
     }
@@ -395,7 +463,14 @@ async function render() {
         el.dataset.priority = m.priority;
         el.dataset.effort = m.effort;
         el.dataset.guild = m.guild;
-        el.innerHTML = '<div class="flex items-center justify-between mb-2"><span class="font-mono text-[0.6rem] text-dim">' + m.id + '</span><span class="font-mono text-[0.55rem] text-dim">' + m.effort + '</span></div><p class="text-sm text-foreground/60 leading-snug mb-2">' + m.title + '</p><span class="font-mono text-[0.55rem] text-dim">' + m.guild + '</span>';
+        el.dataset.searchable = [m.id, m.title, m.assignedTo || "", m.guild].join(" ").toLowerCase();
+        el.innerHTML =
+          '<div class="flex items-center justify-between mb-2">' +
+            '<span class="font-mono text-[0.6rem] text-dim">' + m.id + '</span>' +
+            '<span class="font-mono text-[0.55rem] text-dim">' + m.effort + '</span>' +
+          '</div>' +
+          '<p class="text-sm text-foreground/60 leading-snug mb-2">' + m.title + '</p>' +
+          '<span class="font-mono text-[0.55rem] text-dim">' + m.guild + '</span>';
         cards.appendChild(el);
       }
     }
