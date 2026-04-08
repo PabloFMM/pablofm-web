@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function DeployForm() {
   const [companyName, setCompanyName] = useState("");
@@ -7,11 +7,41 @@ export default function DeployForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loadingStartedAt, setLoadingStartedAt] = useState<number | null>(null);
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  const elapsedMs = useMemo(() => {
+    if (status !== "loading" || !loadingStartedAt) return 0;
+    return Math.max(0, now - loadingStartedAt);
+  }, [loadingStartedAt, now, status]);
+
+  const elapsedLabel = useMemo(() => {
+    const totalSeconds = Math.floor(elapsedMs / 1000);
+    const m = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+    const s = String(totalSeconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  }, [elapsedMs]);
+
+  const phaseLabel = useMemo(() => {
+    const totalSeconds = Math.floor(elapsedMs / 1000);
+    if (totalSeconds < 8) return "Creando workspace…";
+    if (totalSeconds < 25) return "Preparando el repositorio…";
+    if (totalSeconds < 60) return "Investigando tu empresa…";
+    if (totalSeconds < 110) return "Generando documentos canon…";
+    return "Finalizando commits y STATUS.md…";
+  }, [elapsedMs]);
+
+  useEffect(() => {
+    if (status !== "loading") return;
+    const id = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(id);
+  }, [status]);
 
   async function handleDeploy() {
     if (!companyName || !email || !acceptedTerms) return;
 
     setStatus("loading");
+    setLoadingStartedAt(Date.now());
     setErrorMsg("");
 
     try {
@@ -60,8 +90,8 @@ export default function DeployForm() {
             Abrir workspace →
           </a>
           <p className="mt-4 text-sm text-muted-foreground">
-            An AI agent is now researching your company and populating the workspace. Check the
-            STATUS.md file in your repo for progress.
+            El agente ya terminó de investigar y poblar el workspace. Puedes revisar el archivo
+            STATUS.md en el repo para ver el progreso y el historial.
           </p>
         </div>
       </div>
@@ -131,12 +161,27 @@ export default function DeployForm() {
         {status === "loading" ? (
           <span className="flex items-center justify-center gap-2">
             <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-background/30 border-t-background" />
-            Desplegando workspace...
+            {phaseLabel} <span className="font-mono text-[0.75rem] tracking-[0.15em]">{elapsedLabel}</span>
           </span>
         ) : (
           "Deploy Workspace"
         )}
       </button>
+
+      {status === "loading" && (
+        <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent">
+            Investigando tu empresa…
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Esto puede tardar 1–2 minutos. Mantén esta pestaña abierta.
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Progreso: <span className="text-foreground">{phaseLabel}</span>{" "}
+            <span className="font-mono text-[0.75rem] tracking-[0.15em] text-dim">{elapsedLabel}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
