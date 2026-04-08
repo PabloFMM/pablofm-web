@@ -82,12 +82,18 @@ export default function DeployForm() {
             Tu workspace está listo en GitHub.
           </p>
           <a
+            href={`/workspace/${result.slug}`}
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+          >
+            Browse workspace →
+          </a>
+          <a
             href={result.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
+            className="mt-2 inline-flex items-center gap-2 rounded-lg border border-border px-6 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
           >
-            Abrir workspace →
+            View on GitHub →
           </a>
           <p className="mt-4 text-sm text-muted-foreground">
             El agente ya terminó de investigar y poblar el workspace. Puedes revisar el archivo
