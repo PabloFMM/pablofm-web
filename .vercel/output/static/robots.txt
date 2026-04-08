@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pablofm.com/sitemap-index.xml

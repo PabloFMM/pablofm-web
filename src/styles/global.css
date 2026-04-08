@@ -4,24 +4,24 @@
 
 @layer base {
 	:root {
-		/* Font stacks */
-		--font-display: "Instrument Serif", Georgia, serif;
-		--font-sans: "DM Sans", system-ui, sans-serif;
-		--font-mono: "JetBrains Mono", ui-monospace, monospace;
+		/* Font stacks — Geist (Vercel open source) */
+		--font-display: "Geist Variable", system-ui, sans-serif;
+		--font-sans: "Geist Variable", system-ui, sans-serif;
+		--font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
 		/* ── Core palette — RGB triplets for Tailwind opacity support ──────── */
 
-		/* Fondo: negro profundo */
+		/* Fondo: negro espacio */
 		--bg: 5 5 5;
-		--bg-card: 12 11 10;
-		--bg-card-hover: 20 18 16;
-		--border: 45 40 35;
-		--text: 248 244 236;
-		--text-muted: 168 158 142;
-		--text-dim: 110 100 88;
+		--bg-card: 10 12 14;
+		--bg-card-hover: 16 20 24;
+		--border: 35 42 50;
+		--text: 241 240 235;
+		--text-muted: 139 134 128;
+		--text-dim: 90 88 84;
 
-		/* Accent principal: ámbar cálido (solarpunk + cyberpunk) */
-		--accent: 245 158 11;
+		/* Accent principal: teal cálido */
+		--accent: 45 212 191;
 
 		/* ── Solarpunk mediterráneo ───────────────────────────────────────── */
 		--terracota: 193 123 74;   /* #C17B4A */
@@ -46,9 +46,9 @@
 		--purple: 168 85 247;
 
 		/* ── Glow (direct rgba for non-Tailwind use) ─────────────────────── */
-		--accent-glow: rgba(245, 158, 11, 0.12);
-		--veil-glow: rgba(184, 115, 51, 0.07);
-		--cobre-glow: rgba(184, 115, 51, 0.25);
+		--accent-glow: rgba(45, 212, 191, 0.10);
+		--veil-glow: rgba(45, 212, 191, 0.04);
+		--cobre-glow: rgba(45, 212, 191, 0.18);
 
 		/* ── Radius ──────────────────────────────────────────────────────── */
 		--radius: 0.75rem;
@@ -76,7 +76,7 @@
 		@apply min-h-screen bg-background font-sans text-foreground antialiased;
 	}
 
-	/* ── Veil grid — malla digital con tono cobre ────────────────────────── */
+	/* ── Subtle ambient glow (no grid) ──────────────────────────────────── */
 	body::before {
 		content: "";
 		position: fixed;
@@ -84,10 +84,8 @@
 		z-index: 0;
 		pointer-events: none;
 		background-image:
-			linear-gradient(rgba(184, 115, 51, 0.03) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(184, 115, 51, 0.03) 1px, transparent 1px),
 			radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent);
-		background-size: 48px 48px, 48px 48px, 100% 100%;
+		background-size: 100% 100%;
 	}
 
 	/* ── Noise texture overlay ───────────────────────────────────────────── */
@@ -111,23 +109,23 @@
 		background: rgb(5 5 5);
 	}
 	::-webkit-scrollbar-thumb {
-		background: rgba(184, 115, 51, 0.35);
+		background: rgba(45, 212, 191, 0.30);
 		border-radius: 3px;
 	}
 	::-webkit-scrollbar-thumb:hover {
-		background: rgba(245, 158, 11, 0.6);
+		background: rgba(45, 212, 191, 0.55);
 	}
 
 	/* Firefox scrollbar */
 	* {
 		scrollbar-width: thin;
-		scrollbar-color: rgba(184, 115, 51, 0.35) transparent;
+		scrollbar-color: rgba(45, 212, 191, 0.30) transparent;
 	}
 
 	/* ── Text selection ──────────────────────────────────────────────────── */
 	::selection {
-		background: rgba(245, 158, 11, 0.25);
-		color: rgb(248, 244, 236);
+		background: rgba(45, 212, 191, 0.22);
+		color: rgb(241, 240, 235);
 	}
 
 	/* ── Animations ──────────────────────────────────────────────────────── */
