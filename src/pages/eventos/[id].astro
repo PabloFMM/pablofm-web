@@ -1,0 +1,250 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { eventos } from "@/data/eventos";
+
+export function getStaticPaths() {
+  return eventos.map((e) => ({ params: { id: e.id } }));
+}
+
+const { id } = Astro.params;
+const evento = eventos.find((e) => e.id === id);
+
+if (!evento) {
+  return Astro.redirect("/eventos");
+}
+
+const estadoBadge: Record<string, { color: string; label: string; dot: string; pulse?: boolean }> = {
+  "en-curso": {
+    color: "bg-accent/10 text-accent border-accent/30",
+    label: "⚡ En curso",
+    dot: "bg-accent",
+    pulse: true,
+  },
+  "próximo": {
+    color: "bg-yellow/10 text-yellow border-yellow/30",
+    label: "🗓 Próximo",
+    dot: "bg-yellow",
+  },
+  "pasado": {
+    color: "bg-border/40 text-dim border-border",
+    label: "✓ Pasado",
+    dot: "bg-dim",
+  },
+};
+
+const badge = estadoBadge[evento.estado];
+
+function formatFecha(fecha: string, fechaFin?: string): string {
+  const opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
+  const d1 = new Date(fecha + "T12:00:00Z").toLocaleDateString("es-ES", opts);
+  if (!fechaFin) return d1;
+  const d2 = new Date(fechaFin + "T12:00:00Z").toLocaleDateString("es-ES", opts);
+  return `${d1} – ${d2}`;
+}
+---
+
+<Layout
+  title={`${evento.nombre} — Eventos · Pablo FM`}
+  description={evento.descripcion}
+  canonicalPath={`/eventos/${evento.id}`}
+  activeNav="eventos"
+>
+  <!-- Back -->
+  <div class="mx-auto max-w-[1100px] px-6 pt-8">
+    <a
+      href="/eventos"
+      class="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-dim hover:text-accent transition-colors"
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      Eventos
+    </a>
+  </div>
+
+  <!-- Hero -->
+  <section class="pb-12 pt-8">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <!-- Badge -->
+      <span class:list={[
+        "mb-6 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.65rem] font-medium",
+        badge.color,
+      ]}>
+        <span class:list={["h-1.5 w-1.5 rounded-full", badge.dot, badge.pulse ? "animate-pulse" : ""]}></span>
+        {badge.label}
+      </span>
+
+      <h1 class="font-display text-4xl tracking-tight text-foreground sm:text-5xl lg:text-6xl mb-4">
+        {evento.nombre}
+      </h1>
+
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="font-mono text-sm text-accent">{formatFecha(evento.fecha, evento.fechaFin)}</span>
+        <span class="text-border">·</span>
+        <span class="font-mono text-sm text-muted-foreground">{evento.ciudad}</span>
+        {evento.url && (
+          <>
+            <span class="text-border">·</span>
+            <a
+              href={evento.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-mono text-sm text-accent/70 hover:text-accent transition-colors"
+            >
+              {new URL(evento.url).hostname} ↗
+            </a>
+          </>
+        )}
+      </div>
+
+      <p class="max-w-2xl text-lg leading-relaxed text-muted-foreground">{evento.descripcion}</p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="grid gap-8 lg:grid-cols-3">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 flex flex-col gap-8">
+
+          <!-- Charlas -->
+          <div class="rounded-xl border border-border bg-card p-6">
+            <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Charlas</h2>
+            {(evento.charlas && evento.charlas.length > 0) ? (
+              <div class="flex flex-col gap-4">
+                {evento.charlas.map((c) => (
+                  <div class="rounded-lg border border-border/50 bg-background/50 p-4">
+                    <p class="font-medium text-foreground mb-1">{c.titulo}</p>
+                    <p class="font-mono text-[0.65rem] text-dim mb-2">{c.ponente}</p>
+                    {c.aprendizaje && (
+                      <p class="text-sm text-muted-foreground leading-relaxed border-l-2 border-accent/40 pl-3 italic">
+                        {c.aprendizaje}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="rounded-lg border border-dashed border-border/50 p-6 text-center">
+                <p class="font-mono text-[0.6rem] text-dim">
+                  {evento.estado === "en-curso"
+                    ? "Las charlas se añadirán durante el evento."
+                    : evento.estado === "próximo"
+                    ? "El programa se publicará próximamente."
+                    : "No se registraron charlas para este evento."}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <!-- Aprendizajes -->
+          <div class="rounded-xl border border-border bg-card p-6">
+            <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Aprendizajes clave</h2>
+            {(evento.aprendizajes && evento.aprendizajes.length > 0) ? (
+              <ul class="flex flex-col gap-2">
+                {evento.aprendizajes.map((a) => (
+                  <li class="flex items-start gap-3">
+                    <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+                    <span class="text-sm text-muted-foreground leading-relaxed">{a}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div class="rounded-lg border border-dashed border-border/50 p-6 text-center">
+                <p class="font-mono text-[0.6rem] text-dim">
+                  {evento.estado === "en-curso"
+                    ? "Los aprendizajes se documentarán tras el evento."
+                    : evento.estado === "próximo"
+                    ? "Pendiente de celebración."
+                    : "No se registraron aprendizajes para este evento."}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <!-- Reflexión -->
+          {evento.reflexion && (
+            <div class="rounded-xl border border-accent/20 bg-accent/5 p-6">
+              <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Reflexión</h2>
+              <p class="text-sm text-muted-foreground leading-relaxed italic">{evento.reflexion}</p>
+            </div>
+          )}
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="flex flex-col gap-6">
+
+          <!-- Equipo Numen Games -->
+          <div class="rounded-xl border border-border bg-card p-6">
+            <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Equipo Numen Games</h2>
+            <div class="flex flex-col gap-3">
+              {evento.asistentes.map((a) => {
+                const parts = a.split(" — ");
+                const nombre = parts[0];
+                const rol = parts[1];
+                return (
+                  <div class="flex flex-col">
+                    <span class="text-sm font-medium text-foreground">{nombre}</span>
+                    {rol && <span class="font-mono text-[0.6rem] text-dim mt-0.5">{rol}</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <!-- Info del evento -->
+          <div class="rounded-xl border border-border bg-card p-6">
+            <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Info</h2>
+            <dl class="flex flex-col gap-3">
+              <div>
+                <dt class="font-mono text-[0.6rem] text-dim uppercase tracking-[0.15em] mb-0.5">Fecha</dt>
+                <dd class="text-sm text-foreground">{formatFecha(evento.fecha, evento.fechaFin)}</dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[0.6rem] text-dim uppercase tracking-[0.15em] mb-0.5">Ciudad</dt>
+                <dd class="text-sm text-foreground">{evento.ciudad}</dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[0.6rem] text-dim uppercase tracking-[0.15em] mb-0.5">Ubicación</dt>
+                <dd class="text-sm text-foreground">{evento.ubicacion}</dd>
+              </div>
+              {evento.url && (
+                <div>
+                  <dt class="font-mono text-[0.6rem] text-dim uppercase tracking-[0.15em] mb-0.5">Web</dt>
+                  <dd>
+                    <a
+                      href={evento.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-sm text-accent hover:underline break-all"
+                    >
+                      {evento.url}
+                    </a>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          <!-- Contactos -->
+          {(evento.contactos && evento.contactos.length > 0) && (
+            <div class="rounded-xl border border-border bg-card p-6">
+              <h2 class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-4">Contactos</h2>
+              <ul class="flex flex-col gap-1.5">
+                {evento.contactos.map((c) => (
+                  <li class="flex items-start gap-2">
+                    <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent/60"></span>
+                    <span class="text-sm text-muted-foreground">{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

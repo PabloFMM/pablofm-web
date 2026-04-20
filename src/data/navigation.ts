@@ -23,6 +23,7 @@ export const navItems: NavItem[] = [
       { label: "CAO", href: "/cao", id: "cao" },
       { label: "Continuidad", href: "/continuidad", id: "continuidad" },
       { label: "Decisiones", href: "/decisiones", id: "decisiones" },
+      { label: "Eventos", href: "/eventos", id: "eventos" },
       { label: "Gaps", href: "/gaps", id: "gaps" },
       { label: "Idioma", href: "/idioma", id: "idioma" },
       { label: "Missions", href: "/missions", id: "missions" },
